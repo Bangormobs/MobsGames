@@ -1,0 +1,8 @@
+name: MobsGames
+main: uk.co.mobsoc.MobsGames.MobsGames
+version: 0.1
+load : POSTWORLD
+commands:
+   game:
+      description: The Game
+      usage: /game [stuff]
