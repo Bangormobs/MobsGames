@@ -36,8 +36,14 @@ public class GameData {
 		String[] keyValPairs = oD.split("|");
 		HashMap<String, String> pairs = new HashMap<String, String>();
 		for(String pair : keyValPairs){
+			if(pair==""){ continue; }
 			String[] split = pair.split("=");
-			pairs.put(split[0], split[1]);
+			if(split.length==2){
+				pairs.put(split[0], split[1]);
+			}else{
+
+				System.out.println("Unknown extra data : '"+pair+"' in game '"+key+"'");
+			}
 		}
 	}
 	

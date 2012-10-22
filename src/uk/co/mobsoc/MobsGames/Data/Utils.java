@@ -18,7 +18,7 @@ import uk.co.mobsoc.MobsGames.MobsGames;
  *
  */
 public class Utils {
-	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame;
+	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame, sqlAutoGames;
 	/**
 	 * Initialise the Utility Class, and set up MySQL for usage.
 	 * Also any alterations to tables from older versions MUST be done here
@@ -75,6 +75,7 @@ public class Utils {
 			sqlDelWorldBlock = MobsGames.conn.prepareStatement("DELETE FROM Blocks WHERE `world` = ?");
 			
 			sqlGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games");
+			sqlAutoGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games WHERE autostart = true");
 			sqlNewGame = MobsGames.conn.prepareStatement("INSERT INTO Games (`key` , `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world`) VALUES ( ? , ? , ? , ? , ? , ? , ? , ?);");
 			sqlDelWorldGame = MobsGames.conn.prepareStatement("DELETE FROM Games WHERE `world` = ?");
 

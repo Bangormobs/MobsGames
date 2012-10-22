@@ -207,13 +207,19 @@ public class MobsGames extends JavaPlugin{
     			}else{
     				sender.sendMessage("You do not have permission to leave a game");
     			}
+    		}else if(args[0].equalsIgnoreCase("unselect")){
+				playerSelected.put(player.getName().toLowerCase(), null);
+				sender.sendMessage("No game is selected. All new Blocks and Locations will be added to every game.");
+				return true;
     		}else if(args[0].equalsIgnoreCase("select")){
+
     			if(args.length==1){
     				sender.sendMessage("/game select GameName");
     				return true;
     			}
     			GameData gd = getGameData(args[1]);
     			if(gd!=null){
+    				sender.sendMessage("Selected game '"+gd.key+"'");
     				playerSelected.put(player.getName().toLowerCase(), gd.key);
     			}else{
     				sender.sendMessage("Could not find game '"+args[1]+"'");
@@ -245,6 +251,7 @@ public class MobsGames extends JavaPlugin{
         				sender.sendMessage("Game named '"+args[1]+"' already exists. use another name!");
         				return true;
         			}
+        			sender.sendMessage("Created new Game '"+args[1]+"' of type '"+args[2]+"'");
    					Utils.addGame(args[1], args[2], player.getLocation().getWorld().getName());
     			}
     		}else if(args[0].equalsIgnoreCase("location")){
