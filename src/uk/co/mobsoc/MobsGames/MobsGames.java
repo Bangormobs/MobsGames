@@ -11,7 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,7 +39,7 @@ public class MobsGames extends JavaPlugin{
 	private static HashMap<String, Class> gameTypes = new HashMap<String, Class>();
 	private AbstractGame game;
 	private ChatColor b=ChatColor.BLUE,g=ChatColor.GREEN;
-	private String options = b+"["+g+"join"+b+"|"+g+"leave"+b+"|"+g+"start"+b+"|"+g+"stop"+b+"|"+g+"new"+b+"|"+g+"select"+b+"|"+g+"block"+b+"|"+g+"location"+b+"|"+g+"save"+b+"|"+g+"alter"+b+"]";
+	private String options = b+"["+g+"join"+b+"|"+g+"leave"+b+"|"+g+"start"+b+"|"+g+"stop"+b+"|"+g+"new"+b+"|"+g+"select"+b+"|"+g+"unselect"+b+"|"+g+"block"+b+"|"+g+"location"+b+"|"+g+"save"+b+"|"+g+"alter"+b+"|"+g+"list"+b+"]";
 	/** The list of users who are willing to join as soon as a game is called. Should not be used while getGame()!=null */
 	public ArrayList<String> waitingList = new ArrayList<String>();
 
@@ -77,7 +76,7 @@ public class MobsGames extends JavaPlugin{
 			return;
 		}
 		if(gameTypes.containsKey(gameTypeName)){
-			Log.error("Game type '"+gameTypeName+"' already registered!");
+			System.out.println("Game type '"+gameTypeName+"' already registered!");
 			return;
 		}
 		gameTypes.put(gameTypeName, gameType);
@@ -175,6 +174,15 @@ public class MobsGames extends JavaPlugin{
     			}else{
     				sender.sendMessage("You do not have permission to do that");
     			}
+    		}else if(args[0].equalsIgnoreCase("list")){
+    			String list = "", sep="";
+    			ArrayList<GameData> gdList = Utils.getGameList();
+    			for(GameData gd : gdList){
+    				list = list + sep + gd.key;
+    				sep=", ";
+    			}
+    			sender.sendMessage(list);
+    			return true;
     		}else if(args[0].equalsIgnoreCase("join")){
     			if(! (sender instanceof Player)){
     				sender.sendMessage("And all the other reindeers used to laugh and call him names...");
@@ -279,8 +287,8 @@ public class MobsGames extends JavaPlugin{
         						sender.sendMessage("The name '"+args[2]+"' is already used for a loction");
         						return true;
         					}else{
+        						sender.sendMessage("Location '"+args[2]+"' of type '"+args[3]+"' added");
         						l = new LocationData(player.getLocation(), args[2], args[3], key);
-        						// TODO Add the location to DB
         						Utils.addLocationData(l);
         					}
         				}else{
@@ -362,6 +370,7 @@ public class MobsGames extends JavaPlugin{
         						sender.sendMessage("The name '"+args[2]+"' is already used for a block");
         						return true;
         					}else{
+        						sender.sendMessage("The block '"+args[2]+"' of type '"+args[3]+"' added");
         						bdSel.key = key;
         						bdSel.name= args[2];
         						bdSel.type = args[3];
