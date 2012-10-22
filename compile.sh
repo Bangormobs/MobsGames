@@ -9,8 +9,9 @@ if [ -f $file ];
 then
   echo 'A Jar file already exists for this version. Does the git need a commit?'
 else
+  jar cvf ${file} *.yml
   cd src
-  jar cvf ../${file} * ../*.yml
+  jar uvf ../${file} * 
   scp ../${file} tekkit@mobsoc.co.uk:/home/tekkit/www/plugins
 fi
 
