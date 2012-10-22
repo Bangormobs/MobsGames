@@ -8,9 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 
+import uk.co.mobsoc.MobsGames.LogoutTimer;
 import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Data.StoredInventory;
 import uk.co.mobsoc.MobsGames.Data.BlockData;
@@ -72,7 +75,7 @@ public class AbstractGame {
 	 * @param player
 	 * @return 
 	 */
-	protected AbstractPlayerClass getPlayerClass(Player player){
+	public AbstractPlayerClass getPlayerClass(Player player){
 		return getPlayerClass(player.getName());
 	}
 	
@@ -81,7 +84,7 @@ public class AbstractGame {
 	 * @param name
 	 * @return
 	 */
-	protected AbstractPlayerClass getPlayerClass(String name){
+	public AbstractPlayerClass getPlayerClass(String name){
 		name = name.toLowerCase();
 		for(AbstractPlayerClass apc: participants){
 			if(name.equalsIgnoreCase(apc.getPlayerName())){
@@ -461,6 +464,14 @@ public class AbstractGame {
 		}
 		StoredInventory sI = new StoredInventory(iH);
 		inventories.add(sI);
+	}
+
+	/**
+	 * DO NOT OVERRIDE. Called externally when a player logs out to start the timer, if the player remains logged out then they are forfeited from the game
+	 * @param apc
+	 */
+	public void startLogOutTimer(AbstractPlayerClass apc) {
+		new LogoutTimer(apc, 30);
 	}
 	
 }

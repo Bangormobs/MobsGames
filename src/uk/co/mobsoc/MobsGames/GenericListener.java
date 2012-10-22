@@ -2,14 +2,18 @@ package uk.co.mobsoc.MobsGames;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 import uk.co.mobsoc.MobsGames.Data.BlockData;
 import uk.co.mobsoc.MobsGames.Data.SavedData;
+import uk.co.mobsoc.MobsGames.Game.AbstractGame;
+import uk.co.mobsoc.MobsGames.Player.AbstractPlayerClass;
 
 public class GenericListener implements Listener {
 	/**
@@ -35,6 +39,19 @@ public class GenericListener implements Listener {
 		event.setCancelled(true);
 	}
 	
+	@EventHandler
+	public void onLogout(PlayerQuitEvent event){
+		Player player = event.getPlayer();
+		AbstractGame game = MobsGames.getGame();
+		if(game!=null){
+			AbstractPlayerClass apc = game.getPlayerClass(player);
+			if(apc!=null){
+				game.startLogOutTimer(apc);
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event){
 		SavedData.loadWorld(event.getWorld());
 	}

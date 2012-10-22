@@ -55,12 +55,6 @@ public class MobsGamesPlayerListener implements Listener{
 	}
 	
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event){
-		if(MobsGames.getGame()==null){ return ; }
-		MobsGames.getGame().removeParticipant(event.getPlayer().getName(),true);
-	}
-	
-	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
 		if(MobsGames.getGame()==null){ return ; }
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
