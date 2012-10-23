@@ -561,9 +561,30 @@ public class MobsGames extends JavaPlugin{
 				autostart=false;
 			}
 			Random r = new Random();
-			game = gdList.get(r.nextInt(gdList.size()));
+			AbstractGame choice = gdList.get(r.nextInt(gdList.size()));
+			
+			while(!goodChoice(choice)){
+				gdList.remove(choice);
+				if(gdList.size()==0){
+					/* Exhausted all game options. No game yet */
+					return; 
+				}else{
+					choice = gdList.get(r.nextInt(gdList.size()));
+				}
+			}
+			game=choice;
 			getGame().start();
 		}
 		
+	}
+
+	private boolean goodChoice(AbstractGame choice) {
+		int numberOfPlayers = 0;
+		for(String pName : waitingList){
+			if(Bukkit.getPlayer(pName)!=null){
+				numberOfPlayers++;
+			}
+		}
+		return choice.getMinimumPlayers()<=numberOfPlayers;
 	}
 }
