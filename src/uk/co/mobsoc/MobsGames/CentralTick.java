@@ -21,6 +21,10 @@ public class CentralTick implements Runnable{
 		addTick();
 		if(MobsGames.getGame()!=null){
 			MobsGames.getGame().tick();
+		}else{
+			if(MobsGames.autostart){
+				MobsGames.instance.chooseRandomGame();
+			}
 		}
 		
 	}

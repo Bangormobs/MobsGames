@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -30,6 +31,8 @@ import uk.co.mobsoc.MobsGames.Game.Tag;
  *
  */
 public class MobsGames extends JavaPlugin{
+	/** If Games should start automatically */
+	public static boolean autostart=false;
 	/** The current instance of the plugin */
 	public static MobsGames instance;
 	/** The current instance of the connection to MySQL */
@@ -138,7 +141,8 @@ public class MobsGames extends JavaPlugin{
     		sender.sendMessage("/game "+options);
     		return true;
     	}else{
-    		if(args[0].equalsIgnoreCase("start")){
+    		if(args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("autostart")){
+    			if(args[0].equalsIgnoreCase("autostart")){ autostart = true; }
     			if(sender.hasPermission("games.start")){
     				if(getGame()==null || getGame().isFinished()){
     					GameData gd;
@@ -164,6 +168,7 @@ public class MobsGames extends JavaPlugin{
     				sender.sendMessage("You do not have permission to do that");
     			}
     		}else if(args[0].equalsIgnoreCase("stop")){
+    			autostart=false;
     			if(sender.hasPermission("games.stop")){
     				if(getGame() == null){
     					sender.sendMessage("No game currently running!");
@@ -546,5 +551,19 @@ public class MobsGames extends JavaPlugin{
 		for(World w : Bukkit.getWorlds()){
 			SavedData.loadWorld(w);
 		}
+	}
+
+	public void chooseRandomGame() {
+		if(game==null || game.isFinished()){
+			ArrayList<AbstractGame> gdList = new ArrayList<AbstractGame>();
+			if(gdList.size()==0){
+				System.out.println("No games labeled with autostart. bailing");
+				autostart=false;
+			}
+			Random r = new Random();
+			game = gdList.get(r.nextInt(gdList.size()));
+			getGame().start();
+		}
+		
 	}
 }
