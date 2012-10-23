@@ -290,6 +290,7 @@ public class MobsGames extends JavaPlugin{
         						sender.sendMessage("Location '"+args[2]+"' of type '"+args[3]+"' added");
         						l = new LocationData(player.getLocation(), args[2], args[3], key);
         						Utils.addLocationData(l);
+        						return true;
         					}
         				}else{
         					inCorrectvalues=true;
@@ -454,17 +455,44 @@ public class MobsGames extends JavaPlugin{
 				}
 
 				if(gd!=null){
-					String key = args[1];
+					String key = args[1].toLowerCase();
 					String s="", sep="";
 					for(int i = 2; i<args.length; i++){
 						s=s+sep+args[i];
 						sep=" ";
 					}
-					gd.extraData.put(key, s);
-					sender.sendMessage("Set '"+key+"' = '"+s+"' in Game '"+gd.key+"'");
+					if(key.equals("autostart")){
+						if(s.equalsIgnoreCase("true")){
+							gd.autostart=true;
+							sender.sendMessage("'"+gd.key+"' set to autostart.");
+						}else if(s.equalsIgnoreCase("false")){
+							gd.autostart=false;
+							sender.sendMessage("'"+gd.key+"' set to not autostart.");
+						}else{
+							sender.sendMessage("autostart must be true or false");
+						}
+					}else if(key.equals("minplayer") || key.equals("minplayers")){
+						int i = Integer.parseInt(s);
+						gd.minPlayers=i;
+						sender.sendMessage("'"+gd.key+"' now requires "+i+" players to start");
+
+					}else if(key.equals("maxplayer") || key.equals("maxplayers")){
+						int i = Integer.parseInt(s);
+						gd.maxPlayers=i;
+						sender.sendMessage("'"+gd.key+"' now allows a maximum of "+i+" players");
+					}else if(key.equals("time") || key.equals("timelimit")){
+						int i = Integer.parseInt(s);
+						gd.timeLimit=i;
+						sender.sendMessage("'"+gd.key+"' now has a time limit of "+i+" seconds");
+					}else{
+						gd.extraData.put(key, s);
+						sender.sendMessage("Set '"+key+"' = '"+s+"' in Game '"+gd.key+"'");
+					}
+					Utils.updateGame(gd);
 				}else{
 					sender.sendMessage("No game selected! /game select GameName");
 				}
+				return true;
 
 			}
     		return true;

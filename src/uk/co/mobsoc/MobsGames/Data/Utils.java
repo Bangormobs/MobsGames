@@ -18,7 +18,7 @@ import uk.co.mobsoc.MobsGames.MobsGames;
  *
  */
 public class Utils {
-	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame, sqlAutoGames;
+	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame, sqlAutoGames, sqlUpdateGame;
 	/**
 	 * Initialise the Utility Class, and set up MySQL for usage.
 	 * Also any alterations to tables from older versions MUST be done here
@@ -78,6 +78,7 @@ public class Utils {
 			sqlAutoGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games WHERE autostart = true");
 			sqlNewGame = MobsGames.conn.prepareStatement("INSERT INTO Games (`key` , `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world`) VALUES ( ? , ? , ? , ? , ? , ? , ? , ?);");
 			sqlDelWorldGame = MobsGames.conn.prepareStatement("DELETE FROM Games WHERE `world` = ?");
+			sqlUpdateGame = MobsGames.conn.prepareStatement("UPDATE Games SET `timeLimit` = ? , `otherData` = ? , `minPlayers` = ? , `maxPlayers` = ? , `autostart` = ?, `world` = ? WHERE `key` = ?");
 
 			sqlWorld = MobsGames.conn.prepareStatement("SELECT `worldName`, `seed`, `timestamp` FROM Worlds WHERE `worldName` LIKE ?");
 			sqlDelWorld = MobsGames.conn.prepareStatement("DELETE FROM Worlds WHERE `worldName`=?");
@@ -518,6 +519,23 @@ public class Utils {
 			}
 		}
 		return null;
+	}
+
+	public static void updateGame(GameData gd) {
+		// "UPDATE Games SET `timeLimit` = ? , `otherData` = ? , `minPlayers` = ? , `maxPlayers` = ? , `autostart` = ?, `world` = ? WHERE `key` = ?
+		try {
+			sqlUpdateGame.setInt(1, gd.timeLimit);
+			sqlUpdateGame.setString(2, gd.getOtherData());
+			sqlUpdateGame.setInt(3, gd.minPlayers);
+			sqlUpdateGame.setInt(4, gd.maxPlayers);
+			sqlUpdateGame.setBoolean(5, gd.autostart);
+			sqlUpdateGame.setString(6, gd.world);
+			sqlUpdateGame.setString(7, gd.key);
+			sqlUpdateGame.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
