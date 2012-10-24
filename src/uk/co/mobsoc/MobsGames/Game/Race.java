@@ -40,7 +40,7 @@ public class Race extends AbstractGame{
 		ArrayList<String> list = new ArrayList<String>();
 		for(AbstractPlayerClass apc : getParticipants()){
 			if(apc instanceof RaceRunner){
-				list.add(apc.getPlayer().getName());
+				list.add(apc.getPlayerName());
 			}
 		}
 		return list;

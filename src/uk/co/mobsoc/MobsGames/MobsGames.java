@@ -141,8 +141,14 @@ public class MobsGames extends JavaPlugin{
     		sender.sendMessage("/game "+options);
     		return true;
     	}else{
-    		if(args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("autostart")){
-    			if(args[0].equalsIgnoreCase("autostart")){ autostart = true; }
+    		if(args[0].equalsIgnoreCase("autostart")){
+    			if(sender.hasPermission("games.start")){
+    				autostart = true;
+    				return true;
+    			}else{
+    				sender.sendMessage("You do not have permission to do that");
+    			}
+    		}else if(args[0].equalsIgnoreCase("start")){
     			if(sender.hasPermission("games.start")){
     				if(getGame()==null || getGame().isFinished()){
     					GameData gd;
@@ -555,36 +561,38 @@ public class MobsGames extends JavaPlugin{
 
 	public void chooseRandomGame() {
 		if(game==null || game.isFinished()){
-			ArrayList<AbstractGame> gdList = new ArrayList<AbstractGame>();
-			if(gdList.size()==0){
+			ArrayList<GameData> gdList = Utils.getAutoGamesList();
+			if(gdList.size()<=0){
 				System.out.println("No games labeled with autostart. bailing");
 				autostart=false;
 			}
+			System.out.println(gdList.size()+" ");
 			Random r = new Random();
-			AbstractGame choice = gdList.get(r.nextInt(gdList.size()));
+			GameData choice = gdList.get(r.nextInt(gdList.size()));
 			
 			while(!goodChoice(choice)){
 				gdList.remove(choice);
-				if(gdList.size()==0){
+				System.out.println(gdList.size()+" ");
+				if(gdList.size()<=0){
 					/* Exhausted all game options. No game yet */
 					return; 
 				}else{
 					choice = gdList.get(r.nextInt(gdList.size()));
 				}
 			}
-			game=choice;
+			game=choice.createGame();
 			getGame().start();
 		}
 		
 	}
 
-	private boolean goodChoice(AbstractGame choice) {
+	private boolean goodChoice(GameData choice) {
 		int numberOfPlayers = 0;
 		for(String pName : waitingList){
 			if(Bukkit.getPlayer(pName)!=null){
 				numberOfPlayers++;
 			}
 		}
-		return choice.getMinimumPlayers()<=numberOfPlayers;
+		return numberOfPlayers>=choice.minPlayers;
 	}
 }

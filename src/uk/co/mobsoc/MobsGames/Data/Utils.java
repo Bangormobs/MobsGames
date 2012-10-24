@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
+import uk.co.mobsoc.MobsGames.Game.AbstractGame;
 /**
  * This class contains all the static Utility functions that are required too often to add to any one particular class, and ALL MySQL commands should be kept here.
  * @author triggerhapp
@@ -75,7 +76,7 @@ public class Utils {
 			sqlDelWorldBlock = MobsGames.conn.prepareStatement("DELETE FROM Blocks WHERE `world` = ?");
 			
 			sqlGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games");
-			sqlAutoGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games WHERE autostart = true");
+			sqlAutoGames = MobsGames.conn.prepareStatement("SELECT `key`, `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world` FROM Games WHERE autostart = 1");
 			sqlNewGame = MobsGames.conn.prepareStatement("INSERT INTO Games (`key` , `klass`, `timeLimit`, `otherData`, `minPlayers`, `maxPlayers`, `autostart`, `world`) VALUES ( ? , ? , ? , ? , ? , ? , ? , ?);");
 			sqlDelWorldGame = MobsGames.conn.prepareStatement("DELETE FROM Games WHERE `world` = ?");
 			sqlUpdateGame = MobsGames.conn.prepareStatement("UPDATE Games SET `timeLimit` = ? , `otherData` = ? , `minPlayers` = ? , `maxPlayers` = ? , `autostart` = ?, `world` = ? WHERE `key` = ?");
@@ -536,6 +537,23 @@ public class Utils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static ArrayList<GameData> getAutoGamesList() {
+		ArrayList<GameData> gdList = new ArrayList<GameData>();
+		try {
+			sqlAutoGames.execute();
+			ResultSet rs = sqlAutoGames.getResultSet();
+			while(rs.next()){
+				GameData gd = getGameData(rs);
+				gdList.add(gd);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return gdList;
 	}
 
 

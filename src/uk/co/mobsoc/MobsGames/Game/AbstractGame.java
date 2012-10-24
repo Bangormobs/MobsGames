@@ -474,11 +474,4 @@ public class AbstractGame {
 		new LogoutTimer(apc, 30);
 	}
 	
-	/**
-	 * DO NOT OVERRIDE. Called externally to find out the minimum number of players the saved game needs.
-	 */
-	public int getMinimumPlayers(){
-		return gameData.minPlayers;
-	}
-	
 }
