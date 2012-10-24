@@ -27,7 +27,7 @@ public class Race extends AbstractGame{
 	}
 	
 	@Override
-	public AbstractPlayerClass getDefaultClassForPlayer(Player player){
+	public AbstractPlayerClass getDefaultClassForPlayer(String player){
 		return new RaceRunner(player);
 	}
 	

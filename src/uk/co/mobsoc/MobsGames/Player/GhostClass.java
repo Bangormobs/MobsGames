@@ -29,21 +29,27 @@ import uk.co.mobsoc.MobsGames.MobsGames;
 
 public class GhostClass extends AbstractPlayerClass{
 	int indexOf=0;
-	public GhostClass(Player player) {
+	public GhostClass(String player) {
 		super(player);
 	}
 	@Override
 	public void onEnable(){
 		teleToSpawn();
-		getPlayer().sendMessage("You are now in spectator mode. Left and Right click to teleport to players");
+		if(getPlayer()!=null){ getPlayer().sendMessage("You are now in spectator mode. Left and Right click to teleport to players"); }
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
-			apc.getPlayer().hidePlayer(getPlayer());
+			Player p= apc.getPlayer();
+			if(p!=null){
+				p.hidePlayer(getPlayer());
+			}
 		}
 	}
 	@Override
 	public void onDisable(){
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
-			apc.getPlayer().showPlayer(getPlayer());
+			Player p= apc.getPlayer();
+			if(p!=null){
+				p.showPlayer(getPlayer());
+			}
 		}
 	}
 	@Override
@@ -74,13 +80,19 @@ public class GhostClass extends AbstractPlayerClass{
 				if(indexOf<0 || indexOf>= playersLeft.size()){
 					indexOf = playersLeft.size()-1;
 				}
-				getPlayer().teleport(playersLeft.get(indexOf).getPlayer());
+				Player p = playersLeft.get(indexOf).getPlayer();
+				if(p!=null){
+					teleportTo(p.getLocation());
+				}
 			}else if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
 				indexOf++;
 				if(indexOf>= playersLeft.size()){
 					indexOf = 0;
 				}
-				getPlayer().teleport(playersLeft.get(indexOf).getPlayer());				
+				Player p = playersLeft.get(indexOf).getPlayer();
+				if(p!=null){
+					teleportTo(p.getLocation());
+				}
 			}
 		}else if(event instanceof BlockIgniteEvent){
 			((BlockIgniteEvent) event).setCancelled(true);

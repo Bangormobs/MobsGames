@@ -18,7 +18,7 @@ public class LastManStanding extends AbstractGame{
 	}
 	
 	@Override
-	public AbstractPlayerClass getDefaultClassForPlayer(Player player){
+	public AbstractPlayerClass getDefaultClassForPlayer(String player){
 		return new LastManStandingCombatant(player);
 	}
 	

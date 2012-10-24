@@ -23,9 +23,8 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class TagRunner extends AbstractPlayerClass {
 
-	public TagRunner(Player player) {
+	public TagRunner(String player) {
 		super(player);
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public void onEvent(Event event){

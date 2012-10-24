@@ -161,7 +161,7 @@ public class MobsGames extends JavaPlugin{
    							game= gd.createGame();
    	    					getGame().start();
    	    					if(sender instanceof Player){
-   	    						getGame().addParticipant(player);
+   	    						getGame().addParticipant(player.getName());
    	    					}
    						}else{
    							sender.sendMessage("No game selected! /game select GameName");
@@ -204,7 +204,7 @@ public class MobsGames extends JavaPlugin{
     					waitingList.add(player.getName().toLowerCase());
     					sender.sendMessage("Theres no game running right now. You have been added to the waiting list");
     				}else{
-    					getGame().addParticipant(player);
+    					getGame().addParticipant(player.getName());
     					sender.sendMessage("You have been added to the waiting list");
     				}
     			}else{
@@ -566,13 +566,11 @@ public class MobsGames extends JavaPlugin{
 				System.out.println("No games labeled with autostart. bailing");
 				autostart=false;
 			}
-			System.out.println(gdList.size()+" ");
 			Random r = new Random();
 			GameData choice = gdList.get(r.nextInt(gdList.size()));
 			
 			while(!goodChoice(choice)){
 				gdList.remove(choice);
-				System.out.println(gdList.size()+" ");
 				if(gdList.size()<=0){
 					/* Exhausted all game options. No game yet */
 					return; 

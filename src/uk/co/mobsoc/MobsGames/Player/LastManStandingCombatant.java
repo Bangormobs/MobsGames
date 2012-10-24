@@ -14,16 +14,16 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import uk.co.mobsoc.MobsGames.MobsGames;
 
 public class LastManStandingCombatant extends AbstractPlayerClass{
-	public LastManStandingCombatant(Player player) {
+	public LastManStandingCombatant(String player) {
 		super(player);
 	}
 	@Override
 	public void onEnable(){
-		System.out.println(getPlayer().getName()+" is combatant");
+		System.out.println(getPlayerName()+" is combatant");
 	}
 	@Override
 	public void onDisable(){
-		System.out.println(getPlayer().getName()+" is no longer combatant");
+		System.out.println(getPlayerName()+" is no longer combatant");
 	}
 	@Override
 	public void onEvent(Event event){
@@ -41,7 +41,7 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 			((PaintingPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PlayerDeathEvent){
 			System.out.println("Event "+event);
-			MobsGames.getGame().setPlayerClass(new GhostClass(getPlayer()));
+			MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 		}else if(event instanceof EntityDamageEvent){
 			System.out.println("Event "+event);
 			if(!MobsGames.getGame().hasBegun()){

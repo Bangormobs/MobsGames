@@ -21,7 +21,7 @@ import uk.co.mobsoc.MobsGames.Game.Race;
 
 public class RaceRunner extends AbstractPlayerClass {
 
-	public RaceRunner(Player player) {
+	public RaceRunner(String player) {
 		super(player);
 	}
 	@Override

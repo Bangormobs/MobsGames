@@ -17,12 +17,12 @@ public class Tag extends AbstractGame{
 	@Override
 	public void onParticipantQuit(AbstractPlayerClass player){
 		if(player instanceof TagIt){
-			MobsGames.announce(player.getPlayer().getName()+" has forfiet!");			
+			MobsGames.announce(player.getPlayerName()+" has forfiet!");			
 		}
 	}
 	
 	@Override
-	public AbstractPlayerClass getDefaultClassForPlayer(Player player){
+	public AbstractPlayerClass getDefaultClassForPlayer(String player){
 		return new TagRunner(player);
 	}
 	
@@ -30,10 +30,10 @@ public class Tag extends AbstractGame{
 	public void onStart(){
 	}
 	
-	public Player getIt(){
+	public String getIt(){
 		for(AbstractPlayerClass apc: getParticipants()){
 			if(apc instanceof TagIt){
-				return apc.getPlayer();
+				return apc.getPlayerName();
 			}
 		}
 		return null;
@@ -69,7 +69,7 @@ public class Tag extends AbstractGame{
 	@Override
 	public void onTick(){
 		if(hasBegun()){
-			Player p = getIt();
+			String p = getIt();
 			if(p==null){
 				AbstractPlayerClass apc = getRandomParticipant(TagRunner.class);
 				if(apc==null){
@@ -77,11 +77,11 @@ public class Tag extends AbstractGame{
 					noPlayers=true;
 					//fin = true;
 				}else{
-					setPlayerClass(new TagIt(apc.getPlayer()));
+					setPlayerClass(new TagIt(apc.getPlayerName()));
 				}
 				return;
 			}
-			String k =p.getName().toLowerCase();
+			String k =p.toLowerCase();
 			if(timeAsIt.containsKey(k)){
 				timeAsIt.put(k,timeAsIt.get(k)+1);
 			}else{

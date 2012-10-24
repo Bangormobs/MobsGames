@@ -163,7 +163,7 @@ public class AbstractGame {
 	 * @param klass
 	 */
 	public void setPlayerClass(AbstractPlayerClass klass) {
-		AbstractPlayerClass lastClass = getPlayerClass(klass.getPlayer());
+		AbstractPlayerClass lastClass = getPlayerClass(klass.getPlayerName());
 		if(lastClass!=null && klass.getClass() == lastClass.getClass()){ return; }
 		removeParticipant(klass.getPlayerName(),false);
 		participants.add(klass);
@@ -181,41 +181,40 @@ public class AbstractGame {
 	 * Moves all players into position, and sets them to the class specified by getDefaultClassForPlayer. If a player is already approximatly in location, no further teleport is taken. Ditto on class.
 	 */
 	private void teleportToStartPositions(){
-		//MobsGames.getLog().info("Teleporting players into location");
 		boolean skipTele=false;
 		if(startLocations==null || startLocations.size()==0){
 			startLocations = Utils.getLocations(getKey(), "start", "%");
 			if(startLocations.size()==0){
-				//MobsGames.getLog().info("No spawn locations set for this world or this game. They stay where they are :)");
 				// Well shit, no saves start locations
 				skipTele = true;
 			}
 		}
-		ArrayList<Player> players = new ArrayList<Player>();
+		ArrayList<String> players = new ArrayList<String>();
 		for(AbstractPlayerClass apc : getParticipants()){
-			//MobsGames.getLog().info("Adding "+apc.getPlayerName()+" to game start");
 			if(!skipTele){
 				boolean inPlace=false;
 				for(LocationData ld : startLocations){
-					Location pl = apc.getPlayer().getLocation();
-					Location tl = ld.getLocation();
-					System.out.println(tl.getBlockX() +" "+ pl.getBlockX() +" "+ tl.getBlockY() +" "+ pl.getBlockY() +" "+ tl.getBlockZ() +" "+ pl.getBlockZ() +" "+ tl.getWorld().getName()+" "+pl.getWorld().getName());
-					if(tl.getBlockX() == pl.getBlockX() && tl.getBlockY() == pl.getBlockY() && tl.getBlockZ() == pl.getBlockZ() && tl.getWorld().getName().equalsIgnoreCase(pl.getWorld().getName())){
-						// Just Eww
-						inPlace=true;
-						break;
-						
+					if(apc.getPlayer()==null){ 
+						inPlace=false;
+					}else{
+						Location pl = apc.getPlayer().getLocation();
+						Location tl = ld.getLocation();
+						if(tl.getBlockX() == pl.getBlockX() && tl.getBlockY() == pl.getBlockY() && tl.getBlockZ() == pl.getBlockZ() && tl.getWorld().getName().equalsIgnoreCase(pl.getWorld().getName())){
+							// Just Eww ^
+							inPlace=true;
+							break;
+						}
 					}
 				}
 				if(!inPlace){
-					apc.getPlayer().teleport(getNextStartSpawn());
+					apc.teleportTo(getNextStartSpawn());
 				}
 
 			}			
 			// setPlayerClass alters the list of participants, must be run after
-			players.add(apc.getPlayer());
+			players.add(apc.getPlayerName());
 		}
-		for(Player player : players){
+		for(String player : players){
 			setPlayerClass(getDefaultClassForPlayer(player));
 		}
 	}
@@ -225,7 +224,7 @@ public class AbstractGame {
 	 * @param player
 	 * @return
 	 */
-	public AbstractPlayerClass getDefaultClassForPlayer(Player player) {
+	public AbstractPlayerClass getDefaultClassForPlayer(String player) {
 		return new GhostClass(player);
 	}
 
@@ -305,10 +304,7 @@ public class AbstractGame {
 	private void addParticipantsFromWaiting() {
 		for(String s : MobsGames.instance.waitingList){
 			if(s!=null){
-				Player p = Bukkit.getPlayer(s);
-				if(p!=null){
-					addParticipant(p);
-				}
+				addParticipant(s);
 			}
 		}
 		
@@ -340,7 +336,7 @@ public class AbstractGame {
 	/**
 	 * Override ONLY if new players should not join as ghost. If they can join anytime after the game starts, handle teleporting them in from here
 	 */
-	public void addParticipant(Player player) {
+	public void addParticipant(String player) {
 		setPlayerClass(new GhostClass(player));
 	}
 
@@ -447,7 +443,7 @@ public class AbstractGame {
 	 */
 	public void ghostAll(){
 		for(AbstractPlayerClass apc : getParticipants()){
-			setPlayerClass(new GhostClass(apc.getPlayer()));
+			setPlayerClass(new GhostClass(apc.getPlayerName()));
 		}
 	}
 

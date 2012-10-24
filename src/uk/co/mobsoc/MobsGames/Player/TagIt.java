@@ -18,23 +18,27 @@ import uk.co.mobsoc.MobsGames.MobsGames;
 
 public class TagIt extends AbstractPlayerClass {
 
-	public TagIt(Player player) {
+	public TagIt(String player) {
 		super(player);
 		// TODO Auto-generated constructor stub
 	}
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable(){
-		getPlayer().getInventory().clear();
-		getPlayer().setItemInHand(new ItemStack(Material.STICK));
-		getPlayer().updateInventory();
+		if(getPlayer()!=null){
+			getPlayer().getInventory().clear();
+			getPlayer().setItemInHand(new ItemStack(Material.STICK));
+			getPlayer().updateInventory();
+		}
 		MobsGames.announce(getPlayer().getName()+" is it!");
 	}
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable(){
-		getPlayer().getInventory().clear();
-		getPlayer().updateInventory();
+		if(getPlayer()!=null){
+			getPlayer().getInventory().clear();
+			getPlayer().updateInventory();
+		}
 	}
 	@Override
 	public void onEvent(Event event){
@@ -56,8 +60,8 @@ public class TagIt extends AbstractPlayerClass {
 			EntityDamageByEntityEvent e2 = (EntityDamageByEntityEvent) event;
 			if(e2.getDamager() instanceof Player && e2.getEntity() instanceof Player){
 				if(isPlayerEqual((Player) e2.getDamager(), getPlayer())){
-					MobsGames.getGame().setPlayerClass(new TagRunner(getPlayer()));
-					MobsGames.getGame().setPlayerClass(new TagIt((Player) e2.getEntity()));
+					MobsGames.getGame().setPlayerClass(new TagRunner(getPlayerName()));
+					MobsGames.getGame().setPlayerClass(new TagIt(((Player) e2.getEntity()).getName()));
 				}
 			}
 		}else if(event instanceof EntityDamageEvent){

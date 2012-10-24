@@ -1,14 +1,17 @@
 package uk.co.mobsoc.MobsGames.Player;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import uk.co.mobsoc.MobsGames.Data.LocationData;
 import uk.co.mobsoc.MobsGames.Data.Utils;
 
 
 public class AbstractPlayerClass {
+	private Location lastLocation;
 	/**
 	 * Send player to the prepared waiting room. Does not have to be the same location as /spawn takes you to
 	 */
@@ -17,7 +20,7 @@ public class AbstractPlayerClass {
 		if(ld==null){
 			System.out.println("No game location 'spawn' set. No spawn boxing");
 		}else{
-			getPlayer().teleport(ld.getLocation());
+			teleportTo(ld.getLocation());
 		}
 	}
 	
@@ -42,8 +45,8 @@ public class AbstractPlayerClass {
 		}
 		return false;
 	}
-	public AbstractPlayerClass(Player player){
-		playerName=player.getName().toLowerCase();
+	public AbstractPlayerClass(String playerName){
+		this.playerName=playerName.toLowerCase();
 	}
 	/**
 	 * Returns the Bukkit Player class related to this Player
@@ -76,5 +79,27 @@ public class AbstractPlayerClass {
 	 */
 	public void onEvent(Event event){
 		System.out.println(this+" is not handling events correctly!");
+	}
+
+	/**
+	 * DO NOT OVERRIDE! Called Externally when a player returns from a short logout. Teleports player to last location they should have been teleported to
+	 * @param event
+	 */
+	public void onLogin(PlayerJoinEvent event) {
+		if(lastLocation!=null){
+			getPlayer().teleport(lastLocation);
+			lastLocation=null;
+		}
+	}
+
+	/**
+	 * DO NOT OVERRIDE! Called whenever the player should be teleported to a location. This should be used in the off-chance the player is offline
+	 */
+	public void teleportTo(Location l){
+		if(getPlayer()!=null){
+			getPlayer().teleport(l);
+		}else{
+			lastLocation=l;
+		}
 	}
 }
