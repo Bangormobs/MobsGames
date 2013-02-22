@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
@@ -47,6 +48,18 @@ public class GenericListener implements Listener {
 			AbstractPlayerClass apc = game.getPlayerClass(player);
 			if(apc!=null){
 				game.startLogOutTimer(apc);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onLogin(PlayerJoinEvent event){
+		if(MobsGames.instance.autojoin){
+			AbstractGame game = MobsGames.getGame();
+			if(game!=null){
+				game.addParticipant(event.getPlayer().getName());
+			}else{
+				MobsGames.instance.waitingList.add(event.getPlayer().getName());
 			}
 		}
 	}

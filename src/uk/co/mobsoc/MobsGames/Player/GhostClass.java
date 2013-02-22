@@ -2,6 +2,7 @@ package uk.co.mobsoc.MobsGames.Player;
 
 import java.util.ArrayList;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
@@ -27,6 +28,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 
+@SuppressWarnings("deprecation")
 public class GhostClass extends AbstractPlayerClass{
 	int indexOf=0;
 	public GhostClass(String player) {
@@ -42,6 +44,8 @@ public class GhostClass extends AbstractPlayerClass{
 				p.hidePlayer(getPlayer());
 			}
 		}
+		getPlayer().setAllowFlight(true);
+		getPlayer().setGameMode(GameMode.SURVIVAL);
 	}
 	@Override
 	public void onDisable(){
@@ -51,6 +55,7 @@ public class GhostClass extends AbstractPlayerClass{
 				p.showPlayer(getPlayer());
 			}
 		}
+		getPlayer().setAllowFlight(false);
 	}
 	@Override
 	public void onEvent(Event event){

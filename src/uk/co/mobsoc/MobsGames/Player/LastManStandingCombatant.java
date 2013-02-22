@@ -1,6 +1,6 @@
 package uk.co.mobsoc.MobsGames.Player;
 
-import org.bukkit.entity.Player;
+import org.bukkit.GameMode;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -13,17 +13,18 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 
+@SuppressWarnings("deprecation")
 public class LastManStandingCombatant extends AbstractPlayerClass{
 	public LastManStandingCombatant(String player) {
 		super(player);
 	}
 	@Override
 	public void onEnable(){
-		System.out.println(getPlayerName()+" is combatant");
+		getPlayer().setAllowFlight(false);
+		getPlayer().setGameMode(GameMode.SURVIVAL);
 	}
 	@Override
 	public void onDisable(){
-		System.out.println(getPlayerName()+" is no longer combatant");
 	}
 	@Override
 	public void onEvent(Event event){
@@ -40,10 +41,8 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 		}else if(event instanceof PaintingPlaceEvent){
 			((PaintingPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PlayerDeathEvent){
-			System.out.println("Event "+event);
 			MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 		}else if(event instanceof EntityDamageEvent){
-			System.out.println("Event "+event);
 			if(!MobsGames.getGame().hasBegun()){
 				((EntityDamageEvent) event).setCancelled(true);
 			}

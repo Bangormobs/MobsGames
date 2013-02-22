@@ -1,7 +1,5 @@
 package uk.co.mobsoc.MobsGames.Data;
 
-import java.util.UUID;
-
 import org.bukkit.World;
 
 /**

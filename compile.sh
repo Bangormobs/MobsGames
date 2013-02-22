@@ -1,6 +1,6 @@
 #!/bin/sh
 revision=`git log --pretty=format:'' | wc -l`
-classpath='-cp ../IRCChat/bin/com/trigg/irc/:/home/triggerhapp/Downloads/bukkit-1.2.5-R4.1-20120708.060130-22.jar'
+classpath='-cp ../IRCChat/bin/com/trigg/irc/:/home/triggerhapp/Downloads/craftbukkit-1.4.5-R0.2.jar'
 
 find src -name \*.java -print > file.list
 javac ${classpath} @file.list

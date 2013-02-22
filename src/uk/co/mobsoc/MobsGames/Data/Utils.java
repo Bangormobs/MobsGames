@@ -6,13 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
-import uk.co.mobsoc.MobsGames.Game.AbstractGame;
 /**
  * This class contains all the static Utility functions that are required too often to add to any one particular class, and ALL MySQL commands should be kept here.
  * @author triggerhapp

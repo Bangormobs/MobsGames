@@ -1,5 +1,6 @@
 package uk.co.mobsoc.MobsGames.Player;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,13 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import uk.co.mobsoc.MobsGames.MobsGames;
 
 
+@SuppressWarnings("deprecation")
 public class TagIt extends AbstractPlayerClass {
 
 	public TagIt(String player) {
 		super(player);
 		// TODO Auto-generated constructor stub
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable(){
 		if(getPlayer()!=null){
@@ -31,8 +32,9 @@ public class TagIt extends AbstractPlayerClass {
 			getPlayer().updateInventory();
 		}
 		MobsGames.announce(getPlayer().getName()+" is it!");
+		getPlayer().setAllowFlight(false);
+		getPlayer().setGameMode(GameMode.SURVIVAL);
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable(){
 		if(getPlayer()!=null){

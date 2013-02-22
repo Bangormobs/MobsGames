@@ -1,6 +1,5 @@
 package uk.co.mobsoc.MobsGames.Player;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -21,6 +20,7 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 
+@SuppressWarnings("deprecation")
 public class TagRunner extends AbstractPlayerClass {
 
 	public TagRunner(String player) {

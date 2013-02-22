@@ -17,6 +17,7 @@ public class GameData {
 	/** Stores the name of the Game Type this game is */
 	public String klass;
 	/** Stores other data that the specific Game Type might wish to use */
+	@SuppressWarnings("unused")
 	private String otherData;
 	/** Stores the name of this exact version of the game */
 	public String key;
@@ -70,7 +71,7 @@ public class GameData {
 	 * Returns a new instance of this game. 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public AbstractGame createGame() {
 		AbstractGame agame=null;
 		Class myLeanKlass = MobsGames.getGameType(klass);
@@ -81,11 +82,9 @@ public class GameData {
 		try {
 			agame = (AbstractGame)myLeanKlass.newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

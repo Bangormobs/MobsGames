@@ -26,7 +26,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -40,6 +39,7 @@ import uk.co.mobsoc.MobsGames.Player.AbstractPlayerClass;
  * @author triggerhapp
  *
  */
+@SuppressWarnings("deprecation")
 public class MobsGamesPlayerListener implements Listener{
 	public boolean cP(Player p1, Player p2){
 		if(p1==null || p2==null){ return false; }

@@ -2,8 +2,8 @@ package uk.co.mobsoc.MobsGames.Player;
 
 import java.util.ArrayList;
 
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -19,6 +19,7 @@ import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Data.BlockData;
 import uk.co.mobsoc.MobsGames.Game.Race;
 
+@SuppressWarnings("deprecation")
 public class RaceRunner extends AbstractPlayerClass {
 
 	public RaceRunner(String player) {
@@ -26,6 +27,8 @@ public class RaceRunner extends AbstractPlayerClass {
 	}
 	@Override
 	public void onEnable(){
+		getPlayer().setAllowFlight(false);
+		getPlayer().setGameMode(GameMode.SURVIVAL);
 	}
 	@Override
 	public void onDisable(){

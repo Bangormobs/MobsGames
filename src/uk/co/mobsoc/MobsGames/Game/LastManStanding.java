@@ -2,7 +2,6 @@ package uk.co.mobsoc.MobsGames.Game;
 
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Player.AbstractPlayerClass;

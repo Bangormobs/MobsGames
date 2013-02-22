@@ -38,13 +38,14 @@ public class MobsGames extends JavaPlugin{
 	/** The current instance of the connection to MySQL */
 	public static Connection conn;
 	private String userName, passWord, dataBase, IP;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	private static HashMap<String, Class> gameTypes = new HashMap<String, Class>();
 	private AbstractGame game;
 	private ChatColor b=ChatColor.BLUE,g=ChatColor.GREEN;
 	private String options = b+"["+g+"join"+b+"|"+g+"leave"+b+"|"+g+"start"+b+"|"+g+"stop"+b+"|"+g+"new"+b+"|"+g+"select"+b+"|"+g+"unselect"+b+"|"+g+"block"+b+"|"+g+"location"+b+"|"+g+"save"+b+"|"+g+"alter"+b+"|"+g+"list"+b+"]";
 	/** The list of users who are willing to join as soon as a game is called. Should not be used while getGame()!=null */
 	public ArrayList<String> waitingList = new ArrayList<String>();
+	boolean autojoin;
 
 	/**
 	 * Called automatically on server start or reload
@@ -72,7 +73,7 @@ public class MobsGames extends JavaPlugin{
 	 * @param gameTypeName
 	 * @param gameType
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public static void addGameType(String gameTypeName, Class gameType){
 		gameTypeName = gameTypeName.toLowerCase();
 		if(gameTypeName==null || gameType==null){
@@ -91,6 +92,7 @@ public class MobsGames extends JavaPlugin{
 		passWord = getConfig().getString("sql-password");
 		dataBase = getConfig().getString("sql-database");
 		IP = getConfig().getString("sql-ip");
+		autojoin = getConfig().getBoolean("autojoingame");
 
 	}
 
@@ -364,11 +366,7 @@ public class MobsGames extends JavaPlugin{
         			if(args[1].equalsIgnoreCase("add")){
         				BlockData bdSel = blockSelected.get(player.getName().toLowerCase());
         				bdSel = new BlockData(bdSel.getCurrectBlockAt());
-        				if(bdSel==null){
-        					sender.sendMessage("You need to select a block by right clicking it with flint");
-        					return true;
-        				}
-   						GameData gd = getGameData(playerSelected.get(player.getName().toLowerCase()));
+        				GameData gd = getGameData(playerSelected.get(player.getName().toLowerCase()));
    						String key;
    						if(gd==null){
    							key="any";

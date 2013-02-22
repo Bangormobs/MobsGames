@@ -7,9 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
@@ -127,7 +125,7 @@ public class SavedData {
 				}
 			}
 			
-			if(!loadIt){ return; }
+			if(!loadIt){ dis.close(); return; }
 			
 			int max = dis.readInt();
 			for(int count = 0; count < max; count++){

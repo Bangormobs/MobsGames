@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 
@@ -143,7 +140,7 @@ public class AbstractGame {
 	 * @param klass
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public AbstractPlayerClass getRandomParticipant(Class klass){
 		ArrayList<AbstractPlayerClass> apcList = new ArrayList<AbstractPlayerClass>();
 		for(AbstractPlayerClass apc : participants){

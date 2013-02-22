@@ -2,7 +2,6 @@ package uk.co.mobsoc.MobsGames;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.block.ContainerBlock;
 
 
@@ -11,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -28,6 +26,7 @@ import uk.co.mobsoc.MobsGames.Game.AbstractGame;
  * @author triggerhapp
  *
  */
+@SuppressWarnings("deprecation")
 public class RevertingListener implements Listener {
 	/**
 	 * Adds broken blocks to the list of blocks that return to initial state
@@ -140,7 +139,6 @@ public class RevertingListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onInventoryOpen(InventoryOpenEvent event){
 		if(event.isCancelled()){ return; }
