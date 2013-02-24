@@ -58,8 +58,10 @@ public class RaceRunner extends AbstractPlayerClass {
 		}else if(event instanceof PlayerBucketEmptyEvent){
 			((PlayerBucketEmptyEvent) event).setCancelled(true);
 		}else if(event instanceof BlockBreakEvent){
+			if(MobsGames.getGame().allowBreak(((BlockBreakEvent) event).getBlock())){ return; }
 			((BlockBreakEvent) event).setCancelled(true);
 		}else if(event instanceof BlockPlaceEvent){
+			if(MobsGames.getGame().allowPlace(((BlockPlaceEvent) event).getPlayer().getItemInHand())){ return; }
 			((BlockPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingBreakByEntityEvent){
 			((PaintingBreakByEntityEvent) event).setCancelled(true);

@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 
 import uk.co.mobsoc.MobsGames.LogoutTimer;
@@ -481,6 +483,60 @@ public class AbstractGame {
 	 */
 	public void startLogOutTimer(AbstractPlayerClass apc) {
 		new LogoutTimer(apc, 30);
+	}
+
+	/**
+	 * Find out if the metadata allows breaking this block
+	 * @param block 
+	 * @return True if metadata set by game creator allows this block to be broken. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
+	 */
+	public boolean allowBreak(Block block) {
+		for(String s : gameData.extraData.get("blockBreak").split(",")){
+			int id=-1, data=-1;
+			if(s.contains(":")){
+				id = Integer.parseInt(s.split(":")[0]);
+				data = Integer.parseInt(s.split(":")[1]);
+			}else{
+				id = Integer.parseInt(s);
+			}
+			if(id == -1){
+				System.out.println("Error decoding value "+s);
+				return false;
+			}
+			if(id == block.getTypeId()){
+				if(data == -1 || data == block.getData()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Find out if the metadata allows placing this block
+	 * @param item Item the player has in their hand (player.getItemInHand();) 
+	 * @return True if metadata set by game creator allows this block to be placed. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
+	 */
+	public boolean allowPlace(ItemStack itemInHand) {
+		for(String s : gameData.extraData.get("blockPlace").split(",")){
+			int id=-1, data=-1;
+			if(s.contains(":")){
+				id = Integer.parseInt(s.split(":")[0]);
+				data = Integer.parseInt(s.split(":")[1]);
+			}else{
+				id = Integer.parseInt(s);
+			}
+			if(id == -1){
+				System.out.println("Error decoding value "+s);
+				return false;
+			}
+			if(id == itemInHand.getTypeId()){
+				if(data == -1 || data == itemInHand.getDurability()){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }

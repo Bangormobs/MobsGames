@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 /**
@@ -33,7 +34,7 @@ import uk.co.mobsoc.MobsGames.MobsGames;
  *
  */
 public class Utils {
-	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame, sqlAutoGames, sqlUpdateGame;
+	public static PreparedStatement sqlLocation, sqlBlock, sqlGames, sqlNewGame, sqlOneBlock, sqlOneLocation, sqlAddBlock, sqlAddLocation, sqlDelBlock, sqlDelLocation, sqlWorld, sqlDelWorld, sqlAddWorld, sqlDelWorldLocation, sqlDelWorldBlock, sqlDelWorldGame, sqlAutoGames, sqlUpdateGame, sqlAllDataBlock;
 	/**
 	 * Initialise the Utility Class, and set up MySQL for usage.
 	 * Also any alterations to tables from older versions MUST be done here
@@ -84,6 +85,7 @@ public class Utils {
 			sqlDelWorldLocation = MobsGames.conn.prepareStatement("DELETE FROM Locations WHERE `world` = ?");
 
 			sqlBlock = MobsGames.conn.prepareStatement("SELECT `world`, `x`, `y`, `z`, `newID`, `newData`, `type`, `doPhysics`, `name`, `key` FROM Blocks WHERE ( `key` LIKE ? OR `key` = 'any' ) AND `type` LIKE ? AND `world` LIKE ?");
+			sqlAllDataBlock = MobsGames.conn.prepareStatement("SELECT `world`, `x`, `y`, `z`, `newID`, `newData`, `type`, `doPhysics`, `name`, `key` FROM Blocks WHERE x = ? AND y = ? AND z = ? and world = ?");
 			sqlOneBlock = MobsGames.conn.prepareStatement("SELECT `world`, `x`, `y`, `z`, `newID`, `newData`, `type`, `doPhysics`, `name`, `key` FROM Blocks WHERE  `name` = ?");
 			sqlAddBlock = MobsGames.conn.prepareStatement("INSERT INTO Blocks (`world`, `x`, `y`, `z`, `newID`, `newData`, `type`, `doPhysics`, `name`, `key`) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?, ?);");
 			sqlDelBlock = MobsGames.conn.prepareStatement("DELETE FROM Blocks WHERE name = ?");
@@ -394,7 +396,29 @@ public class Utils {
 		updateWorld(bd.world.getName());
 
 	}
-	
+
+	/**
+	 * Get all block data assosciated with block
+	 * @param Block in question
+	 * @return all BlockData, or an empty list in case of error or no data
+	 */
+	public static ArrayList<BlockData> getAllBlockData(Block b){
+		ArrayList<BlockData> blockList = new ArrayList<BlockData>();
+		try{
+			sqlAllDataBlock.setInt(1, b.getX());
+			sqlAllDataBlock.setInt(2, b.getY());
+			sqlAllDataBlock.setInt(3, b.getZ());
+			sqlAllDataBlock.setString(5, b.getWorld().getName());
+			sqlAllDataBlock.execute();
+			ResultSet rs = sqlAllDataBlock.getResultSet();
+			while(rs.next()){
+				blockList.add(getBlock(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return blockList;
+	}
 	
 
 	public static long getWorldTimestamp(String name) {

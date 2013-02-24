@@ -29,6 +29,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 import uk.co.mobsoc.MobsGames.Data.BlockData;
 import uk.co.mobsoc.MobsGames.Data.SavedData;
+import uk.co.mobsoc.MobsGames.Data.Utils;
 import uk.co.mobsoc.MobsGames.Game.AbstractGame;
 import uk.co.mobsoc.MobsGames.Player.AbstractPlayerClass;
 
@@ -48,6 +49,9 @@ public class GenericListener implements Listener {
 			Block b = event.getClickedBlock();
 			MobsGames.instance.blockSelected.put(event.getPlayer().getName().toLowerCase(), new BlockData(b));
 			event.getPlayer().sendMessage("Selected block : "+b.getX()+" "+b.getY()+" "+b.getZ());
+			for(BlockData bd : Utils.getAllBlockData(event.getClickedBlock())){
+				event.getPlayer().sendMessage("id : "+bd.name+" type : "+bd.type+" game : "+bd.key);
+			}
 		}
 	}
 	

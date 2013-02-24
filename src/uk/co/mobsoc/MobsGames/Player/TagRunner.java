@@ -35,6 +35,8 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
+import uk.co.mobsoc.MobsGames.MobsGames;
+
 
 @SuppressWarnings("deprecation")
 public class TagRunner extends AbstractPlayerClass {
@@ -57,9 +59,11 @@ public class TagRunner extends AbstractPlayerClass {
 		}else if(event instanceof PlayerBucketEmptyEvent){
 			((PlayerBucketEmptyEvent) event).setCancelled(true);
 		}else if(event instanceof BlockBreakEvent){
-			//((BlockBreakEvent) event).setCancelled(true);
+			if(MobsGames.getGame().allowBreak(((BlockBreakEvent) event).getBlock())){ return; }
+			((BlockBreakEvent) event).setCancelled(true);
 		}else if(event instanceof BlockPlaceEvent){
-			//((BlockPlaceEvent) event).setCancelled(true);
+			if(MobsGames.getGame().allowPlace(((BlockPlaceEvent) event).getPlayer().getItemInHand())){ return; }
+			((BlockPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof BlockIgniteEvent){
 			((BlockIgniteEvent) event).setCancelled(true);
 		}else if(event instanceof EntityDamageByEntityEvent){
