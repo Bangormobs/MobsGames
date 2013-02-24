@@ -1,6 +1,6 @@
 #!/bin/sh
 revision=`git log --pretty=format:'' | wc -l`
-classpath='-cp ../IRCChat/bin/com/trigg/irc/:/home/triggerhapp/Downloads/craftbukkit-1.4.5-R0.2.jar'
+classpath='-cp ../IRCChat/bin/com/trigg/irc/:/home/triggerhapp/Minecraft/server/craftbukkit-1.4.7-R0.2-20130129.232829-21.jar'
 
 find src -name \*.java -print > file.list
 javac ${classpath} @file.list
@@ -12,6 +12,6 @@ else
   jar cvf ${file} *.yml
   cd src
   jar uvf ../${file} * 
-  scp ../${file} tekkit@mobsoc.co.uk:/home/tekkit/www/plugins
+  scp ../${file} triggerhapp@mobsoc.co.uk:/home/triggerhapp/www/plugins
 fi
 

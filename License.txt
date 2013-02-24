@@ -1,0 +1,4 @@
+There are two parts to the license.
+
+LicenseGPL.txt
+LicenseLGPL.txt
