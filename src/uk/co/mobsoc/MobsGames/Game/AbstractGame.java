@@ -198,7 +198,7 @@ public class AbstractGame {
 		if(startLocations==null || startLocations.size()==0){
 			startLocations = Utils.getLocations(getKey(), "start", "%");
 			if(startLocations.size()==0){
-				// Well shit, no saves start locations
+				// Well shit, no saved start locations
 				skipTele = true;
 			}
 		}
@@ -212,7 +212,7 @@ public class AbstractGame {
 					}else{
 						Location pl = apc.getPlayer().getLocation();
 						Location tl = ld.getLocation();
-						if(tl.getBlockX() == pl.getBlockX() && tl.getBlockY() == pl.getBlockY() && tl.getBlockZ() == pl.getBlockZ() && tl.getWorld().getName().equalsIgnoreCase(pl.getWorld().getName())){
+						if(tl.getBlockX() == pl.getBlockX() && ( tl.getBlockY() == pl.getBlockY() || tl.getBlockY() +1 == pl.getBlockY() ) && tl.getBlockZ() == pl.getBlockZ() && tl.getWorld().getName().equalsIgnoreCase(pl.getWorld().getName())){
 							// Just Eww ^
 							inPlace=true;
 							break;
