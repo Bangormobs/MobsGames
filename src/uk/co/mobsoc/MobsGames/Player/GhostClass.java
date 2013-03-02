@@ -67,7 +67,7 @@ public class GhostClass extends AbstractPlayerClass{
 	public void onDisable(){
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
 			Player p= apc.getPlayer();
-			if(p!=null){
+			if(p!=null && getPlayer()!=null){
 				p.showPlayer(getPlayer());
 			}
 		}
