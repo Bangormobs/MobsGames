@@ -21,12 +21,16 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
+import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Data.LocationData;
 import uk.co.mobsoc.MobsGames.Data.Utils;
 
 
 public class AbstractPlayerClass {
+	private int livesLeft = -2;
+	
 	private Location lastLocation;
 	/**
 	 * Send player to the prepared waiting room. Does not have to be the same location as /spawn takes you to
@@ -73,12 +77,12 @@ public class AbstractPlayerClass {
 	}
 	/**
 	 * Returns the name of the player
-	 * @return
+	 * @returns
 	 */
 	public String getPlayerName(){
 		return playerName;
 	}
-	/**
+	/**s
 	 * Needs Overriding! This is called when a player is moved from another class into this one.
 	 */
 	public void onEnable(){
@@ -117,5 +121,21 @@ public class AbstractPlayerClass {
 		}else{
 			lastLocation=l;
 		}
+	}
+	
+	/**
+	 * Decreases lives left and returns true if they have a lift left.
+	 * returns false is the player has no remaining lives. 
+	 * @return
+	 */
+	public boolean canRespawn(){
+		if(livesLeft == -2){ livesLeft = MobsGames.getGame().getLives(); }
+		if(livesLeft < 0){ return true; }
+		if(livesLeft > 0){
+			getPlayer().sendMessage("You have "+livesLeft+" lives left!");
+			livesLeft--;
+			return true;
+		}
+		return false;
 	}
 }

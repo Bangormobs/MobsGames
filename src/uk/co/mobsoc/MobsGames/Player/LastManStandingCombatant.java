@@ -26,6 +26,7 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 
@@ -58,8 +59,13 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 			((PaintingBreakByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingPlaceEvent){
 			((PaintingPlaceEvent) event).setCancelled(true);
-		}else if(event instanceof PlayerDeathEvent){
-			MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
+		}else if(event instanceof PlayerRespawnEvent){
+			if(!canRespawn()){
+				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
+			}else{
+				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn());
+			}
+			
 		}else if(event instanceof EntityDamageEvent){
 			if(!MobsGames.getGame().hasBegun()){
 				((EntityDamageEvent) event).setCancelled(true);

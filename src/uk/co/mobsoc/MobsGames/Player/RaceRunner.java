@@ -20,6 +20,10 @@ import java.util.ArrayList;
 
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -68,9 +72,33 @@ public class RaceRunner extends AbstractPlayerClass {
 		}else if(event instanceof PaintingPlaceEvent){
 			((PaintingPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof EntityDamageByEntityEvent){
+			Entity att = ((EntityDamageByEntityEvent) event).getDamager();
+			Entity def = ((EntityDamageByEntityEvent) event).getEntity();
+			if(att instanceof Projectile){
+				att = ((Projectile) att).getShooter();
+			}
+			if(def instanceof Tameable){
+				def = (Entity) ((Tameable) def).getOwner();
+				if(def == null){ ((EntityDamageByEntityEvent) event).setCancelled(true); return; }
+			}
+			if(att instanceof Tameable){
+				def = (Entity) ((Tameable) def).getOwner();
+				if(def == null){ ((EntityDamageByEntityEvent) event).setCancelled(true); return; }
+			}
+			if(((Race)MobsGames.getGame()).canPvP){
+				if(att instanceof HumanEntity && def instanceof HumanEntity){
+					return;
+				}
+			}
+			if(((Race) MobsGames.getGame()).canPvM){
+				if((att instanceof HumanEntity && !(def instanceof HumanEntity)) ||
+			       (!(att instanceof HumanEntity) && def instanceof HumanEntity)){
+					return;
+				}
+			}
 			((EntityDamageByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof EntityDamageEvent){
-			((EntityDamageEvent) event).setCancelled(true);
+			return;
 		}else if(event instanceof PlayerInteractEvent){
 			Race race = (Race) MobsGames.getGame();
 			PlayerInteractEvent e2 = (PlayerInteractEvent) event;

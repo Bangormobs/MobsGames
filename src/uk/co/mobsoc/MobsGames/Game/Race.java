@@ -29,6 +29,8 @@ public class Race extends AbstractGame{
 
 	int count;
 	boolean hasStarted;
+	public boolean canPvP, canPvM;
+
 	@Override
 	public void onStartCountdown(){
 		for(BlockData bd : blockAlterations){
@@ -40,6 +42,14 @@ public class Race extends AbstractGame{
 			System.out.println("No 'target' type blocks assosciated with this game... No one can win");
 		}
 		MobsGames.announce("A race has been called. Join before 20 seconds!");
+		canPvP = false;
+		if(gameData.extraData.containsKey("canPvP")){
+			canPvP = Boolean.parseBoolean(gameData.extraData.get("canPvP"));
+		}
+		canPvM = false;
+		if(gameData.extraData.containsKey("canPvM")){
+			canPvM = Boolean.parseBoolean(gameData.extraData.get("canPvM"));
+		}
 	}
 	
 	@Override
@@ -50,6 +60,7 @@ public class Race extends AbstractGame{
 	@Override
 	public void onStart(){
 		count=0;
+
 	}
 	
 	public ArrayList<String> playersLeft(){
@@ -109,5 +120,6 @@ public class Race extends AbstractGame{
 		}
 		return false;
 	}
+	
 
 }

@@ -243,7 +243,7 @@ public class AbstractGame {
 		return new GhostClass(player);
 	}
 
-	private Location getNextStartSpawn() {
+	public Location getNextStartSpawn() {
 		if(startSpawnIndex>=startLocations.size()){ startSpawnIndex=0; }
 		Location l = startLocations.get(startSpawnIndex).getLocation();
 		startSpawnIndex++;
@@ -537,6 +537,13 @@ public class AbstractGame {
 			}
 		}
 		return false;
+	}
+	
+	public int getLives(){
+		if(gameData.extraData.containsKey("lives")){
+			return Integer.parseInt(gameData.extraData.get("lives"));
+		}
+		return -1;
 	}
 	
 }
