@@ -477,6 +477,7 @@ public class MobsGames extends JavaPlugin{
 				}
 				if(args.length<3){
 					sender.sendMessage("/game alter KEY VALUE");
+					return true;
 				}
 
 				if(gd!=null){

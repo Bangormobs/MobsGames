@@ -408,7 +408,7 @@ public class Utils {
 			sqlAllDataBlock.setInt(1, b.getX());
 			sqlAllDataBlock.setInt(2, b.getY());
 			sqlAllDataBlock.setInt(3, b.getZ());
-			sqlAllDataBlock.setString(5, b.getWorld().getName());
+			sqlAllDataBlock.setString(4, b.getWorld().getName());
 			sqlAllDataBlock.execute();
 			ResultSet rs = sqlAllDataBlock.getResultSet();
 			while(rs.next()){
