@@ -50,7 +50,7 @@ public class GameData {
 	public HashMap<String, String> extraData = new HashMap<String, String>();
 	
 	public void setOtherData(String oD){
-		String[] keyValPairs = oD.split("|");
+		String[] keyValPairs = oD.split("\\|");
 		HashMap<String, String> pairs = new HashMap<String, String>();
 		for(String pair : keyValPairs){
 			if(pair==""){ continue; }
