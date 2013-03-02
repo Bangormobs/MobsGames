@@ -34,6 +34,7 @@ import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Data.BlockData;
@@ -99,6 +100,12 @@ public class RaceRunner extends AbstractPlayerClass {
 			((EntityDamageByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof EntityDamageEvent){
 			return;
+		}else if(event instanceof PlayerRespawnEvent){
+			if(!canRespawn()){
+				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
+			}else{
+				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn());
+			}
 		}else if(event instanceof PlayerInteractEvent){
 			Race race = (Race) MobsGames.getGame();
 			PlayerInteractEvent e2 = (PlayerInteractEvent) event;
