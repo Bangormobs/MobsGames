@@ -314,6 +314,7 @@ public class MobsGamesPlayerListener implements Listener{
 	
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event){
+		System.out.println("Respawn event "+event.getPlayer().getName());
 		if(MobsGames.getGame()==null){ return ; }
 		Player player = event.getPlayer();
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
