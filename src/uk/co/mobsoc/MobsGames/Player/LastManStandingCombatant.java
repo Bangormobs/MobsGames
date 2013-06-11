@@ -39,6 +39,8 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 	public void onEnable(){
 		getPlayer().setAllowFlight(false);
 		getPlayer().setGameMode(GameMode.SURVIVAL);
+		getPlayer().getInventory().clear();
+		getPlayer().updateInventory();
 	}
 	@Override
 	public void onDisable(){
