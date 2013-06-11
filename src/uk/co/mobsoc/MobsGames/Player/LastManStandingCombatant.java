@@ -41,6 +41,8 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 		getPlayer().setGameMode(GameMode.SURVIVAL);
 		getPlayer().getInventory().clear();
 		getPlayer().updateInventory();
+		getPlayer().setHealth(20);
+		getPlayer().setFoodLevel(20);
 	}
 	@Override
 	public void onDisable(){
@@ -62,11 +64,13 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 		}else if(event instanceof PaintingPlaceEvent){
 			((PaintingPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PlayerRespawnEvent){
+			this.setPlayer(((PlayerRespawnEvent) event).getPlayer());
 			if(!canRespawn()){
 				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 			}else{
 				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn());
 			}
+			this.setPlayer(null);
 		}else if(event instanceof EntityDamageEvent){
 			if(!MobsGames.getGame().hasBegun()){
 				((EntityDamageEvent) event).setCancelled(true);

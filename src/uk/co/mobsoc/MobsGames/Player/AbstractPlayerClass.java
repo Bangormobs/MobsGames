@@ -30,6 +30,8 @@ import uk.co.mobsoc.MobsGames.Data.Utils;
 
 public class AbstractPlayerClass {
 	private int livesLeft = -2;
+	// I really do NOT like this. but since bukkti.getPlayer() fails for respawn... this is my way around
+	private Player player = null;
 	
 	private Location lastLocation;
 	/**
@@ -69,10 +71,19 @@ public class AbstractPlayerClass {
 		this.playerName=playerName.toLowerCase();
 	}
 	/**
+	 * Very special use case. In PlayerRespawnEvent the normal code paths will fail. set this from event.getPlayer() then set to null as soon as you're done
+	 * do not EVER keep this set for longer than needed.
+	 * @param player
+	 */
+	public void setPlayer(Player player){
+		this.player = player;
+	}
+	/**
 	 * Returns the Bukkit Player class related to this Player
 	 * @return
 	 */
 	public Player getPlayer(){
+		if(player!=null){ return player; }
 		return Bukkit.getPlayer(playerName);
 	}
 	/**
@@ -129,13 +140,21 @@ public class AbstractPlayerClass {
 	 * @return
 	 */
 	public boolean canRespawn(){
-		if(livesLeft == -2){ livesLeft = MobsGames.getGame().getLives(); }
-		if(livesLeft < 0){ return true; }
+		if(livesLeft == -2){
+			System.out.println("Getting Lives from config");
+			livesLeft = MobsGames.getGame().getLives(); 
+		}
+		if(livesLeft < 0){ 
+			System.out.println("Lives = "+livesLeft+" and that means Inf... honest");
+			return true; 
+		}
 		if(livesLeft > 0){
-			getPlayer().sendMessage("You have "+livesLeft+" lives left!");
+			System.out.println("Lives = "+livesLeft);
+			//getPlayer().sendMessage("You have "+livesLeft+" lives left!");
 			livesLeft--;
 			return true;
 		}
+		System.out.println("No lives left. No respawn");
 		return false;
 	}
 }
