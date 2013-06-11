@@ -491,6 +491,8 @@ public class AbstractGame {
 	 * @return True if metadata set by game creator allows this block to be broken. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
 	 */
 	public boolean allowBreak(Block block) {
+		if(gameData==null){ System.out.println("GameData is null?"); }
+		if(gameData.extraData==null){ System.out.println("GameData is null?"); }
 		if(!gameData.extraData.containsKey("blockBreak")){ return false; }
 		for(String s : gameData.extraData.get("blockBreak").split(",")){
 			int id=-1, data=-1;
