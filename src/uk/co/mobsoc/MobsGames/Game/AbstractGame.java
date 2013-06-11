@@ -492,7 +492,7 @@ public class AbstractGame {
 	 */
 	public boolean allowBreak(Block block) {
 		if(gameData==null){ System.out.println("GameData is null?"); }
-		if(gameData.extraData==null){ System.out.println("GameData is null?"); }
+		if(gameData.extraData==null){ System.out.println("ExtraData is null?"); }
 		if(!gameData.extraData.containsKey("blockBreak")){ return false; }
 		for(String s : gameData.extraData.get("blockBreak").split(",")){
 			int id=-1, data=-1;
