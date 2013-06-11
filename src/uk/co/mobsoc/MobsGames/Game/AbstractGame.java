@@ -491,6 +491,7 @@ public class AbstractGame {
 	 * @return True if metadata set by game creator allows this block to be broken. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
 	 */
 	public boolean allowBreak(Block block) {
+		if(!gameData.extraData.containsKey("blockBreak")){ return false; }
 		for(String s : gameData.extraData.get("blockBreak").split(",")){
 			int id=-1, data=-1;
 			if(s.contains(":")){
@@ -518,6 +519,8 @@ public class AbstractGame {
 	 * @return True if metadata set by game creator allows this block to be placed. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
 	 */
 	public boolean allowPlace(ItemStack itemInHand) {
+		if(!gameData.extraData.containsKey("blockPlace")){ return false; }
+
 		for(String s : gameData.extraData.get("blockPlace").split(",")){
 			int id=-1, data=-1;
 			if(s.contains(":")){

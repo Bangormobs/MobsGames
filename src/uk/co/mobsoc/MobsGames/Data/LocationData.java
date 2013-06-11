@@ -62,9 +62,9 @@ public class LocationData {
 	 */
 	public LocationData(Location l, String n, String t, String k){
 		worldName = l.getWorld().getName();
-		x= (int) l.getX();
-		y= (int) l.getY();
-		z= (int) l.getZ();
+		x= l.getBlockX();
+		y= l.getBlockY();
+		z= l.getBlockZ();
 		name = n;
 		type = t;
 		key = k ;
