@@ -182,7 +182,14 @@ public class AbstractGame {
 		if(lastClass!=null && klass.getClass() == lastClass.getClass()){ return; }
 		removeParticipant(klass.getPlayerName(),false);
 		participants.add(klass);
+		if(lastClass!=null){
+			Player p = lastClass.getPlayer();
+			if(p!=null){
+				klass.setPlayer(p);
+			}
+		}
 		klass.onEnable();
+		klass.setPlayer(null);
 	}
 
 	/**
@@ -493,8 +500,8 @@ public class AbstractGame {
 	public boolean allowBreak(Block block) {
 		if(gameData==null){ System.out.println("GameData is null?"); }
 		if(gameData.extraData==null){ System.out.println("ExtraData is null?"); }
-		if(!gameData.extraData.containsKey("blockBreak")){ return false; }
-		for(String s : gameData.extraData.get("blockBreak").split(",")){
+		if(!gameData.extraData.containsKey("blockbreak")){ return false; }
+		for(String s : gameData.extraData.get("blockbreak").split(",")){
 			int id=-1, data=-1;
 			if(s.contains(":")){
 				id = Integer.parseInt(s.split(":")[0]);
@@ -521,9 +528,9 @@ public class AbstractGame {
 	 * @return True if metadata set by game creator allows this block to be placed. This does NOT have to be 100% respected by Game plugins, but should explain in documentation why
 	 */
 	public boolean allowPlace(ItemStack itemInHand) {
-		if(!gameData.extraData.containsKey("blockPlace")){ return false; }
+		if(!gameData.extraData.containsKey("blockplace")){ return false; }
 
-		for(String s : gameData.extraData.get("blockPlace").split(",")){
+		for(String s : gameData.extraData.get("blockplace").split(",")){
 			int id=-1, data=-1;
 			if(s.contains(":")){
 				id = Integer.parseInt(s.split(":")[0]);
