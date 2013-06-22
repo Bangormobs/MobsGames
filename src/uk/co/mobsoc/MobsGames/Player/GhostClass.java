@@ -53,7 +53,11 @@ public class GhostClass extends AbstractPlayerClass{
 	@Override
 	public void onEnable(){
 		teleToSpawn();
-		if(getPlayer()!=null){ getPlayer().sendMessage("You are now in spectator mode. Left and Right click to teleport to players"); }
+		if(getPlayer()!=null){ 
+			getPlayer().sendMessage("You are now in spectator mode. Left and Right click to teleport to players"); 
+		}else{
+			return; 
+		}
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
 			Player p= apc.getPlayer();
 			if(p!=null){
@@ -65,13 +69,15 @@ public class GhostClass extends AbstractPlayerClass{
 	}
 	@Override
 	public void onDisable(){
-		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
-			Player p= apc.getPlayer();
-			if(p!=null && getPlayer()!=null){
-				p.showPlayer(getPlayer());
+		if(getPlayer()!=null){
+			for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
+				Player p= apc.getPlayer();
+				if(p!=null && getPlayer()!=null){
+					p.showPlayer(getPlayer());
+				}
 			}
+			getPlayer().setAllowFlight(false);
 		}
-		getPlayer().setAllowFlight(false);
 	}
 	@Override
 	public void onEvent(Event event){

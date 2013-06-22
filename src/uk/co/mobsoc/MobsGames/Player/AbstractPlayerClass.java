@@ -157,4 +157,5 @@ public class AbstractPlayerClass {
 		System.out.println("No lives left. No respawn");
 		return false;
 	}
+
 }

@@ -40,6 +40,7 @@ import uk.co.mobsoc.MobsGames.Game.AbstractGame;
 import uk.co.mobsoc.MobsGames.Game.LastManStanding;
 import uk.co.mobsoc.MobsGames.Game.Race;
 import uk.co.mobsoc.MobsGames.Game.Tag;
+import uk.co.mobsoc.MobsGames.Game.TeamLMS;
 
 /**
  * The Main Class
@@ -78,6 +79,7 @@ public class MobsGames extends JavaPlugin{
 		addGameType("LastManStanding", LastManStanding.class);
 		addGameType("Tag", Tag.class);
 		addGameType("Race", Race.class);
+		addGameType("TLMS", TeamLMS.class);
 
 
 		Utils.init(userName, passWord, dataBase, IP);

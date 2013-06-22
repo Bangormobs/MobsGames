@@ -38,6 +38,7 @@ public class LogoutTimer implements Runnable{
 		}
 		logouts.put(apc.getPlayerName().toLowerCase(), Bukkit.getScheduler().scheduleSyncDelayedTask(MobsGames.instance, this, timer*20));
 		this.apc = apc;
+		apc.setPlayer(apc.getPlayer());
 	}
 
 	@Override
@@ -47,6 +48,7 @@ public class LogoutTimer implements Runnable{
 		if(player==null){
 			MobsGames.getGame().removeParticipant(apc.getPlayerName(),true);
 		}
+		apc.setPlayer(null);
 	}
 
 }

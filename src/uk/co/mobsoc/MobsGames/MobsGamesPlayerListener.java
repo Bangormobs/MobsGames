@@ -66,8 +66,10 @@ public class MobsGamesPlayerListener implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event){
 		if(MobsGames.getGame()==null){ return ; }
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
+			apc.setPlayer(event.getPlayer());
 			apc.onLogin(event);
 			apc.onEvent(event);
+			apc.setPlayer(null);
 		}
 	}
 	
