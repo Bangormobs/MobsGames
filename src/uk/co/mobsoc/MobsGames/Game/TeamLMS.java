@@ -3,12 +3,12 @@ package uk.co.mobsoc.MobsGames.Game;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-import org.fusesource.jansi.Ansi.Color;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Player.AbstractPlayerClass;
