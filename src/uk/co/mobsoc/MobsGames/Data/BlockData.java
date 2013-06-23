@@ -71,6 +71,19 @@ public class BlockData {
 		world.getBlockAt(x, y, z).setTypeIdAndData(id, (byte) data, doPhysics);
 		
 	}
+	
+	/**
+	 * Compare with a Bukkit block
+	 * @param b
+	 * @return true if the location and world are exactly the same, false else
+	 */
+	public boolean isEqualLocation(Block b){
+		if(b==null){ return false; }
+		return b.getX() == x &&
+			   b.getY() == y &&
+			   b.getZ() == z &&
+			   b.getWorld().getName().equalsIgnoreCase(world.getName());
+	}
 
 	/**
 	 * 

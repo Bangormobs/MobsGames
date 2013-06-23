@@ -194,7 +194,7 @@ public class Utils {
 			String worldName = rs.getString(1);
 			World w = Bukkit.getWorld(worldName);
 			if(w==null){
-				System.out.println("Error, null world in Block from SQL");
+				System.out.println("Error, null world in Block from SQL '"+worldName+"'");
 				return null;
 			}
 			bd.world=w;

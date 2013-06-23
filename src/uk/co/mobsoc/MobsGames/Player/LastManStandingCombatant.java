@@ -71,7 +71,7 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 			if(!canRespawn()){
 				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 			}else{
-				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn());
+				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn(this));
 			}
 			this.setPlayer(null);
 		}else if(event instanceof EntityDamageEvent){

@@ -34,16 +34,20 @@ public class AbstractPlayerClass {
 	private Player player = null;
 	
 	private Location lastLocation;
+	
 	/**
 	 * Send player to the prepared waiting room. Does not have to be the same location as /spawn takes you to
 	 */
 	public void teleToSpawn(){
-		LocationData ld = Utils.getOneLocation("spawn");
+		LocationData ld = MobsGames.getGame().getSpawnFor(this);
 		if(ld==null){
-			System.out.println("No game location 'spawn' set. No spawn boxing");
-		}else{
-			teleportTo(ld.getLocation());
+			ld = Utils.getOneLocation("spawn");
+			if(ld==null){
+				System.out.println("No game location 'spawn' set. No spawn boxing");
+				return;
+			}
 		}
+		teleportTo(ld.getLocation());
 	}
 	
 	/**

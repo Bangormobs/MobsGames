@@ -41,6 +41,8 @@ import uk.co.mobsoc.MobsGames.Game.LastManStanding;
 import uk.co.mobsoc.MobsGames.Game.Race;
 import uk.co.mobsoc.MobsGames.Game.Tag;
 import uk.co.mobsoc.MobsGames.Game.TeamLMS;
+import uk.co.mobsoc.MobsGames.scores.AbstractScoreClass;
+import uk.co.mobsoc.MobsGames.scores.KillsScoreClass;
 
 /**
  * The Main Class
@@ -60,6 +62,7 @@ public class MobsGames extends JavaPlugin{
 	private AbstractGame game;
 	private ChatColor b=ChatColor.BLUE,g=ChatColor.GREEN;
 	private String options = b+"["+g+"join"+b+"|"+g+"leave"+b+"|"+g+"start"+b+"|"+g+"stop"+b+"|"+g+"new"+b+"|"+g+"select"+b+"|"+g+"unselect"+b+"|"+g+"block"+b+"|"+g+"location"+b+"|"+g+"save"+b+"|"+g+"alter"+b+"|"+g+"list"+b+"]";
+	private AbstractScoreClass currentScoreClass;
 	/** The list of users who are willing to join as soon as a game is called. Should not be used while getGame()!=null */
 	public ArrayList<String> waitingList = new ArrayList<String>();
 	boolean autojoin;
@@ -81,11 +84,21 @@ public class MobsGames extends JavaPlugin{
 		addGameType("Race", Race.class);
 		addGameType("TLMS", TeamLMS.class);
 
+		setScoreClass(new KillsScoreClass());
 
 		Utils.init(userName, passWord, dataBase, IP);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new WorldFinder(), 1);
 	}
 	
+	public void setScoreClass(AbstractScoreClass ScoreClass) {
+		if(currentScoreClass!=null){
+			currentScoreClass.stop();
+		}
+		currentScoreClass = ScoreClass;
+		ScoreClass.onEnable();
+		ScoreClass.reschedule();
+	}
+
 	/**
 	 * Add a new Game type in via a plugin. Override the necessary functions in AbstractGame to define how your game should start, play, and end.
 	 * @param gameTypeName

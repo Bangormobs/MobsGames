@@ -202,20 +202,15 @@ public class AbstractGame {
 	/**
 	 * Moves all players into position, and sets them to the class specified by getDefaultClassForPlayer. If a player is already approximatly in location, no further teleport is taken. Ditto on class.
 	 */
-	private void teleportToStartPositions(){
-		boolean skipTele=false;
+	protected void teleportToStartPositions(){
 		if(startLocations==null || startLocations.size()==0){
 			startLocations = Utils.getLocations(getKey(), "start", "%");
-			if(startLocations.size()==0){
-				// Well shit, no saved start locations
-				skipTele = true;
-			}
 		}
 		ArrayList<String> players = new ArrayList<String>();
 		for(AbstractPlayerClass apc : getParticipants()){
-			if(!skipTele){
+			if(getStartLocationsFor(apc).size()>0){
 				boolean inPlace=false;
-				for(LocationData ld : startLocations){
+				for(LocationData ld : getStartLocationsFor(apc)){
 					if(apc.getPlayer()==null){ 
 						inPlace=false;
 					}else{
@@ -229,7 +224,7 @@ public class AbstractGame {
 					}
 				}
 				if(!inPlace){
-					apc.teleportTo(getNextStartSpawn());
+					apc.teleportTo(getNextStartSpawn(apc));
 				}
 
 			}			
@@ -239,6 +234,14 @@ public class AbstractGame {
 		for(String player : players){
 			setPlayerClass(getDefaultClassForPlayer(player));
 		}
+	}
+	
+	/**
+	 * Override this unless people all share ONE list of possible spawn locations : Team games will DEFINATLY need to override this
+	 * 
+	 */
+	public ArrayList<LocationData> getStartLocationsFor(AbstractPlayerClass apc){
+		return startLocations;
 	}
 
 	/**
@@ -250,15 +253,16 @@ public class AbstractGame {
 		return new GhostClass(player);
 	}
 
-	public Location getNextStartSpawn() {
-		if(startSpawnIndex>=startLocations.size()){ startSpawnIndex=0; }
-		Location l = startLocations.get(startSpawnIndex).getLocation();
+	public Location getNextStartSpawn(AbstractPlayerClass apc) {
+		if(startSpawnIndex>=getStartLocationsFor(apc).size()){ startSpawnIndex=0; }
+		Location l = getStartLocationsFor(apc).get(startSpawnIndex).getLocation();
 		startSpawnIndex++;
 		return l;
 	}
 	
 	private void doTickFor(int percent){
 		// First up, check for any blocks that need altering!
+		System.out.println("Tick! "+percent+"% of time expired!");
 		for(BlockData bd : blockAlterations){
 			int time = bd.getTimePercent();
 			if(time>=0 && time==percent){
@@ -312,7 +316,6 @@ public class AbstractGame {
 	 * DO NOT Override or call this function. This is called externally by admin commands, or by automated response if enabled.
 	 */
 	public void start() {
-		addParticipantsFromWaiting();
 		fin=false;
 		startSpawnIndex=0;
 		timeLimit=gameData.timeLimit;
@@ -321,6 +324,7 @@ public class AbstractGame {
 		blockAlterations = Utils.getBlocks(getKey(), "%", gameData.world);
 		startLocations=null;
 		onStartCountdown();
+		addParticipantsFromWaiting();
 	}
 
 	private void addParticipantsFromWaiting() {
@@ -556,6 +560,10 @@ public class AbstractGame {
 			return Integer.parseInt(gameData.extraData.get("lives"));
 		}
 		return -1;
+	}
+
+	public LocationData getSpawnFor(AbstractPlayerClass abstractPlayerClass) {
+		return Utils.getOneLocation("spawn");
 	}
 	
 }

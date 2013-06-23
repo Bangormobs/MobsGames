@@ -18,44 +18,48 @@ package uk.co.mobsoc.MobsGames.Player;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Tameable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
 import uk.co.mobsoc.MobsGames.Data.BlockData;
-import uk.co.mobsoc.MobsGames.Game.Race;
+import uk.co.mobsoc.MobsGames.Data.Utils;
+import uk.co.mobsoc.MobsGames.Game.TeamLMS;
 
 @SuppressWarnings("deprecation")
-public class RaceRunner extends AbstractPlayerClass {
-
-	public RaceRunner(String player) {
+public class TeamLastManStandingCombatant extends AbstractPlayerClass{
+	public TeamLastManStandingCombatant(String player) {
 		super(player);
 	}
 	@Override
 	public void onEnable(){
-		getPlayer().setAllowFlight(false);
-		getPlayer().setGameMode(GameMode.SURVIVAL);
+		if(getPlayer()!=null){
+			getPlayer().setAllowFlight(false);
+			getPlayer().setGameMode(GameMode.SURVIVAL);
+			getPlayer().getInventory().clear();
+			getPlayer().updateInventory();
+			getPlayer().setHealth(20);
+			getPlayer().setFoodLevel(20);
+		}
 	}
 	@Override
 	public void onDisable(){
 	}
-	
-	public ArrayList<BlockData> taggedBlocks = new ArrayList<BlockData>();	
 	@Override
 	public void onEvent(Event event){
 		if(event instanceof PlayerBucketFillEvent){
@@ -72,57 +76,23 @@ public class RaceRunner extends AbstractPlayerClass {
 			((PaintingBreakByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingPlaceEvent){
 			((PaintingPlaceEvent) event).setCancelled(true);
-		}else if(event instanceof EntityDamageByEntityEvent){
-			Entity att = ((EntityDamageByEntityEvent) event).getDamager();
-			Entity def = ((EntityDamageByEntityEvent) event).getEntity();
-			if(att instanceof Projectile){
-				att = ((Projectile) att).getShooter();
-			}
-			if(def instanceof Tameable){
-				def = (Entity) ((Tameable) def).getOwner();
-				if(def == null){ ((EntityDamageByEntityEvent) event).setCancelled(true); return; }
-			}
-			if(att instanceof Tameable){
-				def = (Entity) ((Tameable) def).getOwner();
-				if(def == null){ ((EntityDamageByEntityEvent) event).setCancelled(true); return; }
-			}
-			if(((Race)MobsGames.getGame()).canPvP){
-				if(att instanceof HumanEntity && def instanceof HumanEntity){
-					return;
-				}
-			}
-			if(((Race) MobsGames.getGame()).canPvM){
-				if((att instanceof HumanEntity && !(def instanceof HumanEntity)) ||
-			       (!(att instanceof HumanEntity) && def instanceof HumanEntity)){
-					return;
-				}
-			}
-			((EntityDamageByEntityEvent) event).setCancelled(true);
-		}else if(event instanceof EntityDamageEvent){
-			return;
 		}else if(event instanceof PlayerRespawnEvent){
+			this.setPlayer(((PlayerRespawnEvent) event).getPlayer());
 			if(!canRespawn()){
 				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 			}else{
 				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn(this));
 			}
-		}else if(event instanceof PlayerInteractEvent){
-			Race race = (Race) MobsGames.getGame();
-			PlayerInteractEvent e2 = (PlayerInteractEvent) event;
-			if(e2.hasBlock()){
-				Block b = e2.getClickedBlock();
-				BlockData bd = new BlockData(b);
-				if(race.isWinningBlock(bd)){
-					e2.setCancelled(true);
-					for(BlockData bd2 : taggedBlocks){
-						if(bd2.isEqualLocation(bd)){
-							return;
-						}
-					}
-					taggedBlocks.add(bd);
-				}
+			this.setPlayer(null);
+		}else if(event instanceof EntityDamageEvent){
+			if(!MobsGames.getGame().hasBegun()){
+				((EntityDamageEvent) event).setCancelled(true);
 			}
+		}else if(event instanceof PlayerInteractEvent){
+			PlayerInteractEvent pie = (PlayerInteractEvent) event;
+			((TeamLMS)MobsGames.getGame()).joinTeam(pie.getPlayer(), pie.getClickedBlock());
+			
+
 		}
 	}
 }
-
