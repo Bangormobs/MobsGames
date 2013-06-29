@@ -52,6 +52,10 @@ public class TeamLastManStandingCombatant extends AbstractPlayerClass{
 			getPlayer().setAllowFlight(false);
 			getPlayer().setGameMode(GameMode.SURVIVAL);
 			getPlayer().getInventory().clear();
+			getPlayer().getInventory().setBoots(null);
+			getPlayer().getInventory().setChestplate(null);
+			getPlayer().getInventory().setHelmet(null);
+			getPlayer().getInventory().setLeggings(null);
 			getPlayer().updateInventory();
 			getPlayer().setHealth(20);
 			getPlayer().setFoodLevel(20);
@@ -59,6 +63,7 @@ public class TeamLastManStandingCombatant extends AbstractPlayerClass{
 	}
 	@Override
 	public void onDisable(){
+		getPlayer().setGameMode(GameMode.ADVENTURE);
 	}
 	@Override
 	public void onEvent(Event event){
