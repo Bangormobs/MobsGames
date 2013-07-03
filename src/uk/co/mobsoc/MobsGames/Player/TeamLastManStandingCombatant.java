@@ -63,20 +63,25 @@ public class TeamLastManStandingCombatant extends AbstractPlayerClass{
 	}
 	@Override
 	public void onDisable(){
-		getPlayer().setGameMode(GameMode.ADVENTURE);
+		if(getPlayer()!=null){
+			getPlayer().setGameMode(GameMode.SURVIVAL);
+			getPlayer().setAllowFlight(false);
+			getPlayer().getInventory().clear();
+			getPlayer().getInventory().setBoots(null);
+			getPlayer().getInventory().setChestplate(null);
+			getPlayer().getInventory().setHelmet(null);
+			getPlayer().getInventory().setLeggings(null);
+			getPlayer().updateInventory();
+			getPlayer().setHealth(20);
+			getPlayer().setFoodLevel(20);
+		}
 	}
 	@Override
 	public void onEvent(Event event){
 		if(event instanceof PlayerBucketFillEvent){
-			((PlayerBucketFillEvent) event).setCancelled(true);
+			//((PlayerBucketFillEvent) event).setCancelled(true);
 		}else if(event instanceof PlayerBucketEmptyEvent){
-			((PlayerBucketEmptyEvent) event).setCancelled(true);
-		}else if(event instanceof BlockBreakEvent){
-			if(MobsGames.getGame().allowBreak(((BlockBreakEvent) event).getBlock())){ return; }
-			((BlockBreakEvent) event).setCancelled(true);
-		}else if(event instanceof BlockPlaceEvent){
-			if(MobsGames.getGame().allowPlace(((BlockPlaceEvent) event).getPlayer().getItemInHand())){ return; }
-			((BlockPlaceEvent) event).setCancelled(true);
+			//((PlayerBucketEmptyEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingBreakByEntityEvent){
 			((PaintingBreakByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingPlaceEvent){
@@ -95,7 +100,8 @@ public class TeamLastManStandingCombatant extends AbstractPlayerClass{
 			}
 		}else if(event instanceof PlayerInteractEvent){
 			PlayerInteractEvent pie = (PlayerInteractEvent) event;
-			((TeamLMS)MobsGames.getGame()).joinTeam(pie.getPlayer(), pie.getClickedBlock());
+			//PlayerInteractEvent pie = (PlayerInteractEvent) event;
+			//((TeamLMS)MobsGames.getGame()).joinTeam(pie.getPlayer(), pie.getClickedBlock());
 			
 
 		}

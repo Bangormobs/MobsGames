@@ -75,7 +75,15 @@ public class MobsGamesPlayerListener implements Listener{
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
-		if(MobsGames.getGame()==null){ return ; }
+		if(MobsGames.getGame()==null){
+			if(!event.getPlayer().hasPermission("games.alter")){
+				event.setCancelled(true);
+			}
+			return ;
+		}
+		if(!MobsGames.getGame().allowBreak(event.getBlock())){
+			event.setCancelled(true);
+		}
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
 			if(cP(event.getPlayer(),apc.getPlayer())){
 				apc.onEvent(event);
@@ -85,8 +93,16 @@ public class MobsGamesPlayerListener implements Listener{
 	
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event){
-		if(MobsGames.getGame()==null){ return ; }
-		if(event.getItemInHand().getType()==Material.PISTON_BASE || event.getItemInHand().getType() == Material.PISTON_STICKY_BASE){ event.setCancelled(true); return; }
+		if(MobsGames.getGame()==null){
+			if(!event.getPlayer().hasPermission("games.alter")){
+				event.setCancelled(true);
+			}
+			return ;
+		}
+		if(event.getItemInHand().getType()==Material.PISTON_BASE || event.getItemInHand().getType() == Material.PISTON_STICKY_BASE){ event.setCancelled(true); }
+		if(!MobsGames.getGame().allowPlace(event.getBlock().getState())){
+			event.setCancelled(true);
+		}
 		for(AbstractPlayerClass apc : MobsGames.getGame().getParticipants()){
 			if(cP(event.getPlayer(),apc.getPlayer())){
 				apc.onEvent(event);
@@ -124,6 +140,10 @@ public class MobsGamesPlayerListener implements Listener{
 	
 	@EventHandler
 	public void onDamageByEntity(EntityDamageByEntityEvent event){
+		if(MobsGames.getGame()==null && event.getEntity() instanceof Player){
+			event.setCancelled(true);
+			return ;
+		}
 		if(MobsGames.getGame()==null){ return ; }
 		Entity damager = event.getDamager();
 		Entity damagee = event.getEntity();

@@ -40,8 +40,13 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 		if(getPlayer()!=null){ 
 
 			getPlayer().setAllowFlight(false);
+			getPlayer().setAllowFlight(false);
 			getPlayer().setGameMode(GameMode.SURVIVAL);
 			getPlayer().getInventory().clear();
+			getPlayer().getInventory().setBoots(null);
+			getPlayer().getInventory().setChestplate(null);
+			getPlayer().getInventory().setHelmet(null);
+			getPlayer().getInventory().setLeggings(null);
 			getPlayer().updateInventory();
 			getPlayer().setHealth(20);
 			getPlayer().setFoodLevel(20);
@@ -49,6 +54,18 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 	}
 	@Override
 	public void onDisable(){
+		if(getPlayer()!=null){
+			getPlayer().setAllowFlight(false);
+			getPlayer().setGameMode(GameMode.SURVIVAL);
+			getPlayer().getInventory().clear();
+			getPlayer().getInventory().setBoots(null);
+			getPlayer().getInventory().setChestplate(null);
+			getPlayer().getInventory().setHelmet(null);
+			getPlayer().getInventory().setLeggings(null);
+			getPlayer().updateInventory();
+			getPlayer().setHealth(20);
+			getPlayer().setFoodLevel(20);
+		}
 	}
 	@Override
 	public void onEvent(Event event){
@@ -56,12 +73,6 @@ public class LastManStandingCombatant extends AbstractPlayerClass{
 			((PlayerBucketFillEvent) event).setCancelled(true);
 		}else if(event instanceof PlayerBucketEmptyEvent){
 			((PlayerBucketEmptyEvent) event).setCancelled(true);
-		}else if(event instanceof BlockBreakEvent){
-			if(MobsGames.getGame().allowBreak(((BlockBreakEvent) event).getBlock())){ return; }
-			((BlockBreakEvent) event).setCancelled(true);
-		}else if(event instanceof BlockPlaceEvent){
-			if(MobsGames.getGame().allowPlace(((BlockPlaceEvent) event).getPlayer().getItemInHand())){ return; }
-			((BlockPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingBreakByEntityEvent){
 			((PaintingBreakByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingPlaceEvent){

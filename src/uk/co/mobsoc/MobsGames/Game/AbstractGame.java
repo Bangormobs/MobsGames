@@ -355,7 +355,9 @@ public class AbstractGame {
 	private void addParticipantsToWaiting() {
 		MobsGames.instance.waitingList=new ArrayList<String>();
 		for(AbstractPlayerClass apc : participants){
-			MobsGames.instance.waitingList.add(apc.getPlayerName().toLowerCase());
+			if(apc.getPlayer()!=null){
+				MobsGames.instance.waitingList.add(apc.getPlayerName().toLowerCase());
+			}
 		}
 	}
 
@@ -434,12 +436,27 @@ public class AbstractGame {
 	
 	private void doRevert(){
 		System.out.println("Reverting : "+revertList.size()+" blocks");
+		// Two passes. First we re-place solid blocks, then things like torches, flowers, signs on second pass
+		// If done all in one pass, we'll be trying to place torches and signs against nothing, so they will just drop on the floor
 		for(int i = revertList.size()-1 ; i>=0 ; i--){
-			revertList.get(i).doPlacement();
+			if(!doLast(revertList.get(i).id)){
+				revertList.get(i).doPlacement();
+			}
 		}
+		for(int i = revertList.size()-1 ; i>=0 ; i--){
+			if(doLast(revertList.get(i).id)){
+				revertList.get(i).doPlacement();
+			}
+		}
+		
 		for(StoredInventory sI : inventories){
 			sI.revertNow();
 		}
+
+	}
+
+	private boolean doLast(int id) {
+		return id == 6 || id == 26 || id == 27 || id == 28 || id == 30 || id == 31 || id == 32 || id == 37 || id == 38 || id == 39 || id == 40 || id == 50 || id == 51 || id == 55 || id == 59 || id == 64 || id == 63 || id == 65 || id == 66 || id == 68 || id == 69 || id == 70 || id == 71 || id == 72 || id == 75 || id == 76 || id == 77 || id == 78 || id == 83 || id == 85 || id == 96 || id == 12 || id == 13 || id == 106 || id == 127 || id == 131 || id == 132 || id == 111 || id == 141 || id == 142 || id == 143 || id == 144 || id == 145 || id == 154 || id == 147 || id == 148 || id == 171;
 	}
 
 	/**
@@ -525,6 +542,31 @@ public class AbstractGame {
 		}
 		return false;
 	}
+	
+	public boolean allowPlace(BlockState blockState) {
+		if(!gameData.extraData.containsKey("blockplace")){ return false; }
+
+		for(String s : gameData.extraData.get("blockplace").split(",")){
+			int id=-1, data=-1;
+			if(s.contains(":")){
+				id = Integer.parseInt(s.split(":")[0]);
+				data = Integer.parseInt(s.split(":")[1]);
+			}else{
+				id = Integer.parseInt(s);
+			}
+			if(id == -1){
+				System.out.println("Error decoding value "+s);
+				return false;
+			}
+			if(id == blockState.getTypeId()){
+				if(data == -1 || data == blockState.getRawData()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	
 	/**
 	 * Find out if the metadata allows placing this block

@@ -50,24 +50,53 @@ public class RaceRunner extends AbstractPlayerClass {
 	public void onEnable(){
 		getPlayer().setAllowFlight(false);
 		getPlayer().setGameMode(GameMode.SURVIVAL);
+		getPlayer().getInventory().clear();
+		getPlayer().getInventory().setBoots(null);
+		getPlayer().getInventory().setChestplate(null);
+		getPlayer().getInventory().setHelmet(null);
+		getPlayer().getInventory().setLeggings(null);
+		getPlayer().updateInventory();
+		getPlayer().setHealth(20);
+		getPlayer().setFoodLevel(20);
 	}
 	@Override
 	public void onDisable(){
+		if(getPlayer()!=null){
+			getPlayer().setAllowFlight(false);
+			getPlayer().setGameMode(GameMode.SURVIVAL);
+			getPlayer().getInventory().clear();
+			getPlayer().getInventory().setBoots(null);
+			getPlayer().getInventory().setChestplate(null);
+			getPlayer().getInventory().setHelmet(null);
+			getPlayer().getInventory().setLeggings(null);
+			getPlayer().updateInventory();
+			getPlayer().setHealth(20);
+			getPlayer().setFoodLevel(20);
+		}
+		
 	}
 	
 	public ArrayList<BlockData> taggedBlocks = new ArrayList<BlockData>();	
 	@Override
 	public void onEvent(Event event){
 		if(event instanceof PlayerBucketFillEvent){
-			((PlayerBucketFillEvent) event).setCancelled(true);
+		}else if(event instanceof PlayerInteractEvent){
+			Race race = (Race) MobsGames.getGame();
+			PlayerInteractEvent e2 = (PlayerInteractEvent) event;
+			if(e2.hasBlock()){
+				Block b = e2.getClickedBlock();
+				BlockData bd = new BlockData(b);
+				if(race.isWinningBlock(bd)){
+					e2.setCancelled(true);
+					for(BlockData bd2 : taggedBlocks){
+						if(bd2.isEqualLocation(bd)){
+							return;
+						}
+					}
+					taggedBlocks.add(bd);
+				}
+			}
 		}else if(event instanceof PlayerBucketEmptyEvent){
-			((PlayerBucketEmptyEvent) event).setCancelled(true);
-		}else if(event instanceof BlockBreakEvent){
-			if(MobsGames.getGame().allowBreak(((BlockBreakEvent) event).getBlock())){ return; }
-			((BlockBreakEvent) event).setCancelled(true);
-		}else if(event instanceof BlockPlaceEvent){
-			if(MobsGames.getGame().allowPlace(((BlockPlaceEvent) event).getPlayer().getItemInHand())){ return; }
-			((BlockPlaceEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingBreakByEntityEvent){
 			((PaintingBreakByEntityEvent) event).setCancelled(true);
 		}else if(event instanceof PaintingPlaceEvent){
@@ -105,22 +134,6 @@ public class RaceRunner extends AbstractPlayerClass {
 				MobsGames.getGame().setPlayerClass(new GhostClass(getPlayerName()));
 			}else{
 				((PlayerRespawnEvent) event).setRespawnLocation(MobsGames.getGame().getNextStartSpawn(this));
-			}
-		}else if(event instanceof PlayerInteractEvent){
-			Race race = (Race) MobsGames.getGame();
-			PlayerInteractEvent e2 = (PlayerInteractEvent) event;
-			if(e2.hasBlock()){
-				Block b = e2.getClickedBlock();
-				BlockData bd = new BlockData(b);
-				if(race.isWinningBlock(bd)){
-					e2.setCancelled(true);
-					for(BlockData bd2 : taggedBlocks){
-						if(bd2.isEqualLocation(bd)){
-							return;
-						}
-					}
-					taggedBlocks.add(bd);
-				}
 			}
 		}
 	}

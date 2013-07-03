@@ -16,8 +16,10 @@
  */
 package uk.co.mobsoc.MobsGames.Data;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.ContainerBlock;
 /**
  * Stores data about Blocks that were or will be, also stores metadata that will be useful to games
  * @author triggerhapp
@@ -68,7 +70,12 @@ public class BlockData {
 	 * Set the block at this Location to the ID/data defined in the fields
 	 */
 	public void doPlacement() {
-		world.getBlockAt(x, y, z).setTypeIdAndData(id, (byte) data, doPhysics);
+		Block b = world.getBlockAt(x, y, z);
+		if(b.getState() instanceof ContainerBlock){
+			((ContainerBlock)b.getState()).getInventory().clear();
+		}
+		b.setType(Material.AIR);
+		b.setTypeIdAndData(id, (byte) data, doPhysics);
 		
 	}
 	

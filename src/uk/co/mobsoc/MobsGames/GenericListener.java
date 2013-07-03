@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,7 +45,7 @@ public class GenericListener implements Listener {
 		if(event.isCancelled()){ return; }
 		if(!event.hasBlock()){ return; }
 		if(!event.getPlayer().hasPermission("games.alter")){ return ; }
-		if(event.getPlayer().getItemInHand().getType() == Material.FLINT){
+		if(event.getAction()==Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getType() == Material.FLINT){
 			event.setCancelled(true);
 			Block b = event.getClickedBlock();
 			MobsGames.instance.blockSelected.put(event.getPlayer().getName().toLowerCase(), new BlockData(b));
@@ -56,7 +57,7 @@ public class GenericListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onFireSet(BlockBurnEvent event){
+	public void onFireDestroyBlock(BlockBurnEvent event){
 		event.setCancelled(true);
 	}
 	

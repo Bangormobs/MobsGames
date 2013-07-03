@@ -18,21 +18,33 @@ package uk.co.mobsoc.MobsGames;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.ContainerBlock;
 
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 import uk.co.mobsoc.MobsGames.Data.BlockData;
@@ -137,21 +149,20 @@ public class RevertingListener implements Listener {
 	}
 	
 	/**
-	 * Add Levers to the list of blocks to return to initial state
+	 * Add Interacted items to the list of blocks to return to initial state
 	 * @param event
 	 */
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onInteractBlock(PlayerInteractEvent event){
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
 		if(event.isCancelled()){ return; }
 		if(event.hasBlock()){
-			AbstractGame game = MobsGames.getGame();
-			if(game==null){ return; }
-			if(game.isParticipant(event.getPlayer())){
-				if(event.getClickedBlock().getType() == Material.LEVER){
-					BlockData bd = new BlockData(event.getClickedBlock());
-					game.addRevert(bd);
-				}
-			}
+			BlockData bd = new BlockData(event.getClickedBlock());
+			game.addRevert(bd);
+			//bd = new BlockData(event.getClickedBlock().getRelative(event.getBlockFace()));
+			//game.addRevert(bd);
+
 		}
 	}
 
@@ -167,6 +178,92 @@ public class RevertingListener implements Listener {
 				game.addRevert(iH);
 			}
 			
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onBlockPhysicsEvent(BlockPhysicsEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		game.addRevert(new BlockData(event.getBlock()));
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onEntityBlockFormEvent(EntityBlockFormEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);	
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onBlockFormEvent(BlockFormEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);		
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onBlockSpreadEvent(BlockSpreadEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onBlockFadeEvent(BlockFadeEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);		
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onLeavesDecayEvent(LeavesDecayEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);		
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onEntityChangeBlockEvent(EntityChangeBlockEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		BlockData bd = new BlockData(event.getBlock());
+		game.addRevert(bd);
+		//System.out.println("Block changed from "+event.getBlock().getTypeId()+" to "+event.getTo().getId()+" by "+event.getEntity());
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onStructureGrowEvent(StructureGrowEvent event){
+		if(event.isCancelled()){ return; }
+		AbstractGame game = MobsGames.getGame();
+		if(game==null){ return; }
+		for(BlockState bs : event.getBlocks()){
+			BlockData bd = new BlockData(bs.getBlock());
+			game.addRevert(bd);
+		}
+	}
+	
+	/* HAX : REMOVE THIS */
+	@EventHandler
+	public void onSpawnVillager(CreatureSpawnEvent event){
+		if(event.isCancelled()){ return; }
+		if(event.getEntity() instanceof Villager){
+			Villager vil = (Villager) event.getEntity();
+			if(vil.getProfession() == Profession.PRIEST || vil.getProfession() == Profession.LIBRARIAN){
+				vil.setProfession(Profession.BLACKSMITH);
+			}
 		}
 	}
 }

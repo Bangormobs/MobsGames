@@ -18,6 +18,7 @@ package uk.co.mobsoc.MobsGames.Player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -82,6 +83,11 @@ public class AbstractPlayerClass {
 	public void setPlayer(Player player){
 		this.player = player;
 	}
+	
+	public OfflinePlayer getOfflinePlayer(){
+		if(player!=null){ return player; }
+		return Bukkit.getOfflinePlayer(playerName);
+	}
 	/**
 	 * Returns the Bukkit Player class related to this Player
 	 * @return
@@ -145,7 +151,6 @@ public class AbstractPlayerClass {
 	 */
 	public boolean canRespawn(){
 		if(livesLeft == -2){
-			System.out.println("Getting Lives from config");
 			livesLeft = MobsGames.getGame().getLives(); 
 		}
 		if(livesLeft < 0){ 
@@ -153,12 +158,10 @@ public class AbstractPlayerClass {
 			return true; 
 		}
 		if(livesLeft > 0){
-			System.out.println("Lives = "+livesLeft);
 			//getPlayer().sendMessage("You have "+livesLeft+" lives left!");
 			livesLeft--;
 			return true;
 		}
-		System.out.println("No lives left. No respawn");
 		return false;
 	}
 

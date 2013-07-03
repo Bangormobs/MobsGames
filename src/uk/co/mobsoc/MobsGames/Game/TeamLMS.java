@@ -30,6 +30,8 @@ public class TeamLMS extends AbstractGame{
 	ArrayList<LocationData> redStarts, blueStarts;
 	LocationData redSpawn, blueSpawn;
 	boolean hasStarted;
+	ScoreboardManager sbm;
+	Scoreboard sb;
 	
 	@Override
 	public void onStartCountdown(){
@@ -43,24 +45,19 @@ public class TeamLMS extends AbstractGame{
 		if(Utils.getLocations(getKey(), "spawn-blue", "%").size()>0){
 			blueSpawn = Utils.getLocations(getKey(), "spawn-blue", "%").get(0);
 		}
-		System.out.println("blue has "+blueStarts.size()+" starts / red has "+redStarts.size()+" starts");
-		if(redSpawn!=null){
-			System.out.println("red have a valid spawn");
-		}
-		if(blueSpawn!=null){
-			System.out.println("blue have a valid spawn");
-		}
 		// TODO Allow customisation via game metadata... changing colour and name of teams
+		sbm = Bukkit.getScoreboardManager();
+		sb = sbm.getMainScoreboard();
 		Team tRed = getRedTeam();
 		Team tBlue = getBlueTeam();
 		tRed.setDisplayName("RedTeam");
 		tBlue.setDisplayName("BlueTeam");
-		tRed.setPrefix(ChatColor.RED+"");
-		tBlue.setPrefix(ChatColor.BLUE+"");
+		//tRed.setPrefix(ChatColor.RED+"");
+		//tBlue.setPrefix(ChatColor.BLUE+"");
 		tRed.setAllowFriendlyFire(false);
 		tBlue.setAllowFriendlyFire(false);
-		tRed.setCanSeeFriendlyInvisibles(true);
-		tBlue.setCanSeeFriendlyInvisibles(true);
+		//tRed.setCanSeeFriendlyInvisibles(true);
+		//tBlue.setCanSeeFriendlyInvisibles(true);
 		
 		MobsGames.announce("A game of Team Last Man standing has been called. Join before 20 seconds!");
 	}
@@ -69,13 +66,10 @@ public class TeamLMS extends AbstractGame{
 	public LocationData getSpawnFor(AbstractPlayerClass apc) {
 		OfflinePlayer op = Bukkit.getOfflinePlayer(apc.getPlayerName());
 		if(getRedTeam().hasPlayer(op)){
-			System.out.println("Player is Red");
 			return redSpawn;
 		}else if(getBlueTeam().hasPlayer(op)){
-			System.out.println("Player is Blue");
 			return blueSpawn;
 		}
-		System.out.println("Player is Teamless");
 		return null;
 	}
 	
@@ -98,30 +92,31 @@ public class TeamLMS extends AbstractGame{
 	
 	@Override
 	public void onStart(){
-		
+
 	}
 	
 	public Team getRedTeam(){
-		ScoreboardManager sbm = Bukkit.getScoreboardManager();
-		Scoreboard sb = sbm.getMainScoreboard();
-		Team tRed;
+
+		Team tRed=null;
 		try{
-			tRed = sb.registerNewTeam("red");
-		}catch(IllegalArgumentException e){
 			tRed = sb.getTeam("red");
+		}catch(IllegalArgumentException e){
+		}
+		if(tRed==null){
+			tRed = sb.registerNewTeam("red");
 		}
 		
 		return tRed;
 	}
 
 	public Team getBlueTeam(){
-		ScoreboardManager sbm = Bukkit.getScoreboardManager();
-		Scoreboard sb = sbm.getMainScoreboard();
-		Team tBlue;
+		Team tBlue=null;
 		try{
-			tBlue = sb.registerNewTeam("blue");
-		}catch(IllegalArgumentException e){
 			tBlue = sb.getTeam("blue");
+		}catch(IllegalArgumentException e){
+		}
+		if(tBlue == null){
+			tBlue = sb.registerNewTeam("blue");
 		}
 		
 		return tBlue;
@@ -129,8 +124,6 @@ public class TeamLMS extends AbstractGame{
 	
 	@Override
 	public void onEnd(){
-		ScoreboardManager sbm = Bukkit.getScoreboardManager();
-		Scoreboard sb = sbm.getMainScoreboard();
 		Team tRed = sb.getTeam("red");
 		Team tBlue = sb.getTeam("blue");
 		int blueplayers = 0, redplayers=0;
@@ -187,13 +180,11 @@ public class TeamLMS extends AbstractGame{
 		for(BlockData bd : bds){
 			if(bd.isEqualLocation(clickedBlock)){
 				if(bd.type.equalsIgnoreCase("join-red")){
-					System.out.println("Adding "+player.getDisplayName()+" to Red");
 					player.sendMessage("You have joined the Red team");
 					getRedTeam().addPlayer(player);
 					MobsGames.getGame().addParticipant(player.getName());
 				}else if(bd.type.equalsIgnoreCase("join-blue")){
 					player.sendMessage("You have joined the Blue team");
-					System.out.println("Adding "+player.getDisplayName()+" to Blue");
 					getBlueTeam().addPlayer(player);
 					MobsGames.getGame().addParticipant(player.getName());
 				}else{

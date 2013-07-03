@@ -84,7 +84,7 @@ public class MobsGames extends JavaPlugin{
 		addGameType("Race", Race.class);
 		addGameType("TLMS", TeamLMS.class);
 
-		setScoreClass(new KillsScoreClass());
+		//setScoreClass(new KillsScoreClass());
 
 		Utils.init(userName, passWord, dataBase, IP);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new WorldFinder(), 1);
