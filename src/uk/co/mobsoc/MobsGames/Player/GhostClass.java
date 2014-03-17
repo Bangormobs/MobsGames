@@ -41,8 +41,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.scoreboard.Team;
 
 import uk.co.mobsoc.MobsGames.MobsGames;
+import uk.co.mobsoc.MobsGames.Game.TeamLMS;
 
 @SuppressWarnings("deprecation")
 public class GhostClass extends AbstractPlayerClass{
@@ -103,19 +105,14 @@ public class GhostClass extends AbstractPlayerClass{
 			ArrayList<AbstractPlayerClass> playersLeft = MobsGames.getGame().getNonGhosts();
 			if(playersLeft.size()==0){ return; }
 			if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction()== Action.LEFT_CLICK_BLOCK){
-				indexOf--;
-				if(indexOf<0 || indexOf>= playersLeft.size()){
-					indexOf = playersLeft.size()-1;
-				}
+				getNextIndex(-1);
 				Player p = playersLeft.get(indexOf).getPlayer();
 				if(p!=null){
 					teleportTo(p.getLocation());
 				}
 			}else if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
-				indexOf++;
-				if(indexOf>= playersLeft.size()){
-					indexOf = 0;
-				}
+				getNextIndex(1);
+
 				Player p = playersLeft.get(indexOf).getPlayer();
 				if(p!=null){
 					teleportTo(p.getLocation());
@@ -143,5 +140,37 @@ public class GhostClass extends AbstractPlayerClass{
 			Player p = ((PlayerJoinEvent) event).getPlayer();
 			p.hidePlayer(this.getPlayer());
 		}
+	}
+	
+	private void getNextIndex(int direction){
+		if(direction!=-1 && direction!=1){
+			System.out.println("Invalid direction "+direction);
+		}
+		int start = indexOf;
+		int current =indexOf + direction;
+		ArrayList<AbstractPlayerClass> playersLeft = MobsGames.getGame().getNonGhosts();
+		Team red = TeamLMS.getRedTeam();
+		Team blue = TeamLMS.getBlueTeam();
+		boolean checkTeam = false;
+		if(red.hasPlayer(getPlayer()) || blue.hasPlayer(getPlayer())){ checkTeam=true; }
+		while(current != start){
+			Player p = playersLeft.get(current).getPlayer();
+			if(
+				(red.hasPlayer(p) && red.hasPlayer(getPlayer())) ||
+				(blue.hasPlayer(p) && blue.hasPlayer(getPlayer())) ||
+				!checkTeam
+			  ){
+				indexOf=  current; return; 
+				
+			}
+			current += direction;
+			if(indexOf>= playersLeft.size()){
+				indexOf = 0;
+			}
+			if(indexOf<0){
+				indexOf = playersLeft.size()-1;
+			}
+		}
+		return;
 	}
 }

@@ -31,7 +31,7 @@ public class TeamLMS extends AbstractGame{
 	LocationData redSpawn, blueSpawn;
 	boolean hasStarted;
 	ScoreboardManager sbm;
-	Scoreboard sb;
+	static Scoreboard sb;
 	
 	@Override
 	public void onStartCountdown(){
@@ -95,7 +95,7 @@ public class TeamLMS extends AbstractGame{
 
 	}
 	
-	public Team getRedTeam(){
+	public static Team getRedTeam(){
 
 		Team tRed=null;
 		try{
@@ -109,7 +109,7 @@ public class TeamLMS extends AbstractGame{
 		return tRed;
 	}
 
-	public Team getBlueTeam(){
+	public static Team getBlueTeam(){
 		Team tBlue=null;
 		try{
 			tBlue = sb.getTeam("blue");
